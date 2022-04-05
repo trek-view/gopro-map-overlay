@@ -1,6 +1,13 @@
 import json
 from geojson import Point
 import os
+import argparse
+
+parser = argparse.ArgumentParser()
+files_dir = 'geojson-files'
+
+parser.add_argument("-f", "--file", help="Telemetry Filename Including .json")
+args = parser.parse_args()
 
 # Find the samples value in dict
 def find_by_key(data, target):
@@ -11,7 +18,11 @@ def find_by_key(data, target):
         	yield value
 
 def main():
-	with open('./data.json') as json_file:
+	if not args.file:
+		print("Please provide the telemetry filename (in base directory) using the -f flag, e.g. python3 generategeojson.py -f mytelemetry.json")
+		exit()
+
+	with open(f'./{args.file}') as json_file:
 		data = json.load(json_file)
 		linestring = []
 
@@ -24,12 +35,12 @@ def main():
 			)
 
 		try: 
-			os.mkdir("./files") 
+			os.mkdir(f"./{files_dir}") 
 		except OSError as error: 
 			print(error)  
 
 		for index, x in enumerate(data):
-			f = open(f"./files/{index}.geojson", "x")
+			f = open(f"./{files_dir}/{index:06}.geojson", "x")
 
 			filedata = f'{{"type": "Point","coordinates": {[x["GPS (Lat.) [deg]"], x["GPS (Long.) [deg]"]]}}}'
 			f.write(filedata)
