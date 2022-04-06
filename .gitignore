@@ -158,3 +158,8 @@ cython_debug/
 #.idea/
 
 # End of https://www.toptal.com/developers/gitignore/api/python
+
+/geojson-files
+/mapbox-images
+*.json
+.DS_Store
