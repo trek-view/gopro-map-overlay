@@ -11,7 +11,7 @@ Use GoPro telemetry to generate a picture-in-picture map.
   * Note: This was done to shorten the URL requests as [there is an 8192 character limit](https://docs.mapbox.com/api/overview/#url-length-limits), therefore the entire `.geojson` file for the `LineString` cannot be passed in a single request.
 4. Open the `geojsonrequest.py` and:
   * paste in your MapBox API key into the `access_key` variable. [You can get a MapBox API key here](https://account.mapbox.com/) that will allow you [50,000 free static image lookups each month](https://www.mapbox.com/pricing/#glstatic).
-  * paste in your username and layer replacing `USERNAME/STYLE_ID/`. For example `trekview/cl1nbz22z002614pn626zhm7`
+  * paste in your username and layer replacing the default `trekview/cl1nbz22z002614pn626zhm7u`.
 5. Run `python3 geojsonrequest.py`. This will generate .jpg map images in the directory `mapbox-images/`.
 
 

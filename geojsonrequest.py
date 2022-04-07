@@ -23,7 +23,7 @@ def main():
 
 			encodeddata = urllib.parse.quote(json.dumps(data), safe='')
 
-			r = requests.get(f"https://api.mapbox.com/styles/v1/mitchelbourne/cl1jw3qpv005014q4s04zfzea/static/geojson({encodeddata})/{xcoord}, {ycoord},17/500x300?access_token={access_token}")
+			r = requests.get(f"https://api.mapbox.com/styles/v1/trekview/cl1nbz22z002614pn626zhm7u/static/geojson({encodeddata})/{xcoord}, {ycoord},17/500x300?access_token={access_token}")
 			
 			if r.status_code == 200:
 				with open(f"./{images_dir}/{index:06}.png", 'wb') as f:
