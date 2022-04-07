@@ -14,6 +14,13 @@ Use GoPro telemetry to generate a picture-in-picture map.
   * paste in your username and layer replacing `USERNAME/STYLE_ID/`. For example `trekview/cl1nbz22z002614pn626zhm7`
 5. Run `python3 geojsonrequest.py`. This will generate .jpg map images in the directory `mapbox-images/`.
 
+
+## Todo 
+
+1. Automate step 3 by creating a mapbox style programatically
+2. Add the final logic to overlay mapbox images on video
+3. Bundle everything into a single script, taking `variables.txt` and an input json via the command line.
+
 ## License
 
 The code of this site is licensed under a [MIT License](/LICENSE).
