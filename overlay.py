@@ -8,26 +8,38 @@ import ffmpeg
 from os import listdir
 from os.path import isfile, join
 import json
+import sys
+
+image_dir = "./images/"
+videopath = 'sample.mp4'
+outpath = 'out.mp4'
+jsonpath = "data.json"
+
+if len(sys.argv) == 5:
+    jsonpath = sys.argv[1]
+    image_dir = sys.argv[2]
+    videopath = sys.argv[3]
+    outpath = sys.argv[4]
 
 # get image list
-image_path = "./images/"
-image_list = [f for f in listdir(image_path) if isfile(join(image_path, f))]
+
+image_list = [f for f in listdir(image_dir) if isfile(join(image_dir, f))]
 overlays = []
 
 # get geojson data
-f = open("data.json")
+f = open(jsonpath)
 geojson = json.load(f)
 f.close()
 geopoints = geojson["1"]["streams"]["GPS5"]["samples"]
 
 # get main video
-stream = ffmpeg.input('sample.mp4')
+stream = ffmpeg.input(videopath)
 
 x = 0
 
 # load images to overlay
 for im in image_list:
-    overlays.append(ffmpeg.input(image_path+im))
+    overlays.append(ffmpeg.input(image_dir+im))
 
 for i, geopoint in enumerate(geopoints):
     if(i == len(overlays)):
@@ -39,7 +51,7 @@ for i, geopoint in enumerate(geopoints):
     if(i == len(geopoints)-2):
         break
 
-stream = ffmpeg.output(stream, 'out.mp4')
+stream = ffmpeg.output(stream, outpath)
 
 # WARNING: will throw error if there are too many images on windows (command line argument too long)
 ffmpeg.run(stream)

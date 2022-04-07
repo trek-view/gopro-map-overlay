@@ -9,14 +9,15 @@ overlay map. The result will not be saved.
 import cv2
 import json
 import time
+import sys
 
-def show_video(geojson):
+def show_video(geojson, videofile='sample.mp4', image_dir="images/"):
     start = time.time()
-    cam = cv2.VideoCapture('sample.mp4')
+    cam = cv2.VideoCapture(videofile)
     geopoints = geojson["1"]["streams"]["GPS5"]["samples"]
     geo_i = 0
     next_time = geopoints[1]["cts"]
-    map_overlay = cv2.imread("images/"+str(geo_i)+".png")
+    map_overlay = cv2.imread(image_dir+str(geo_i)+".png")
     while True:
         ret_val, img = cam.read()
 
@@ -30,7 +31,7 @@ def show_video(geojson):
         if (now * 1000) > next_time:
             geo_i += 1
             next_time = geopoints[geo_i+1]["cts"]
-            map_overlay = cv2.imread("images/"+str(geo_i)+".png")
+            map_overlay = cv2.imread(image_dir+str(geo_i)+".png")
             
         # resize image
         resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
@@ -49,12 +50,20 @@ def show_video(geojson):
 
 
 def main():
+    videofile='sample.mp4'
+    image_dir="images/"
+    jsonpath = "data.json"
+    if len(sys.argv) == 4 :
+        jsonpath=sys.argv[1]
+        image_dir=sys.argv[2]
+        videofile = sys.argv[3]
+
     # read json
-    f = open("data.json")
+    f = open(jsonpath)
     geojson = json.load(f)
     f.close()
-    # print(geojson)
-    show_video(geojson)
+
+    show_video(geojson, videofile, image_dir)
 
 
 if __name__ == '__main__':

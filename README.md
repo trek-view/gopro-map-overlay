@@ -21,6 +21,51 @@ Use GoPro telemetry to generate a picture-in-picture map.
 2. Add the final logic to overlay mapbox images on video
 3. Bundle everything into a single script, taking `variables.txt` and an input json via the command line.
 
+## Overlay Scripts
+
+There are 2 scripts: overlay.py (ffmpeg) and overlay_cv2.py (opencv)
+
+### overlay.py
+
+This script requires ffmpeg installed in the system and ffmpeg-python from pip. For example, in Ubuntu:
+
+    # install ffmpeg
+    sudo apt install ffmpeg
+
+    # install ffmpeg-python (assuming it is python 3, or use pip3)
+    pip install ffmpeg-python
+
+To run this script:
+
+    python overlay.py [json] [image_directory] [main_video] [output_video_path]
+
+not supplying any of the arguments will result in default value for all arguments.
+
+Default values:
+
+    json = "data.json"
+    image_directory = './images/'
+    main_video = 'sample.mp4'
+    output_video_path = 'out.mp4'
+
+### overlay_cv2.py
+
+This script requires opencv. To install it, run:
+
+    pip install opencv-python
+
+To run this script:
+
+    python overlay_cv2.py [json] [image_directory] [main_video]
+
+not supplying any of the arguments will result in default value for all arguments.
+
+Default values:
+
+    json = "data.json"
+    image_directory = './images/'
+    main_video = 'sample.mp4'
+
 ## License
 
 The code of this site is licensed under a [MIT License](/LICENSE).
