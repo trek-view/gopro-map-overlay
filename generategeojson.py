@@ -17,6 +17,19 @@ def find_by_key(data, target):
         elif key == target:
         	yield value
 
+def generate_multiline_geojson(data):
+	mutiline = []
+	filedata = ''
+
+	for index, x in enumerate(data[1::2]):
+		mutiline.append([[data[index]["GPS (Lat.) [deg]"], data[index]["GPS (Long.) [deg]"]],[data[index + 1]["GPS (Lat.) [deg]"], data[index + 1]["GPS (Long.) [deg]"]]])
+
+	filedata = f'{{"type": "FeatureCollection","features": [{{"type": "Feature","geometry": {{"type": "MultiLineString","coordinates": {mutiline}}},"properties": {{"prop0": "value0"}}}}]}}'
+
+	f = open(f"./multiline.geojson", "w")
+	f.write(filedata)
+	f.close()
+
 def main():
 	if not args.file:
 		print("Please provide the telemetry filename (in base directory) using the -f flag, e.g. python3 generategeojson.py -f mytelemetry.json")
@@ -38,6 +51,8 @@ def main():
 			os.mkdir(f"./{files_dir}") 
 		except OSError as error: 
 			print(error)  
+
+		generate_multiline_geojson(data)
 
 		for index, x in enumerate(data):
 			f = open(f"./{files_dir}/{index:06}.geojson", "x")
