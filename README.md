@@ -36,11 +36,13 @@ mapbox_username: YOUR_USER
 mapbox_base_style: outdoors
 mapbox_zoom_level: 10
 mapbox_img_w: 500
-mapbox_marker_colour_hex: E48241
-mapbox_marker_colour_hexstyle: 000000
+mapbox_line_colour_hex: E48241
+mapbox_marker_colour_hex: 000000
 video_overlay_l_offset_pc:
 video_overlay_t_offset_pc:
 ```
+
+### 360 video @ 5.6k
 
 
 ## Todo 
