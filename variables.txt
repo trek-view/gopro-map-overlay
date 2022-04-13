@@ -1,6 +1,8 @@
-mapbox_key:
-mapbox_base_style:
+map_zoom:
 mapbox_img_w:
+mapbox_key:
+mapbox_username:
 mapbox_zoom_level:
+style:
 video_overlay_l_offset_pc:
 video_overlay_t_offset_pc:
