@@ -17,14 +17,30 @@ TODO
 To run the script you need to set the following variables:
 
 * `mapbox_key`: your MapBox API key. [You can get a MapBox API key here](https://account.mapbox.com/) that will allow you [50,000 free static image lookups each month](https://www.mapbox.com/pricing/#glstatic).
+`mapbox_username`: you MapBox username/account name. [You can see this under your account settings in MapBox](https://account.mapbox.com/)
 * `mapbox_base_style`: [Set your basemap style](https://studio.mapbox.com/styles). Options are: `streets`, `outdoors`, `satellite`, `satellite_streets`, `light`, `dark`
 * `mapbox_img_w`: defines the width of the image for overlay. Recommended is 20% of video input width. Image height will be generated automatically based of 4:3 resolution.
 * `mapbox_zoom_level`: the zoom level for the map (recommended between 8-10). [See MapBox docs for more](https://docs.mapbox.com/help/glossary/zoom-level/).
 * `mapbox_marker_colour_hex`: the colour you want for the map point, passed as a 6 digit hex code (e.g. `000000` for black)
 * `mapbox_line_colour_hex`: the colour you want for the line passed as a 6 digit hex code
 * `video_overlay_l_offset`: Left pixel padding
-* `video_overlay_t_offset`:
+* `video_overlay_t_offset`: Top pixel padding
 
+## Sample varible for common GoPro video sizes
+
+### HERO video @ 5.2k
+
+```
+mapbox_key: YOUR_KEY
+mapbox_username: YOUR_USER
+mapbox_base_style: outdoors
+mapbox_zoom_level: 10
+mapbox_img_w: 500
+mapbox_marker_colour_hex: E48241
+mapbox_marker_colour_hexstyle: 000000
+video_overlay_l_offset_pc:
+video_overlay_t_offset_pc:
+```
 
 
 ## Todo 
