@@ -1,7 +1,8 @@
-import json
-from geojson import Point
-import os
 import argparse
+import json
+import os
+
+from geojson import Point
 
 parser = argparse.ArgumentParser()
 files_dir = 'geojson-files'
@@ -15,51 +16,56 @@ def find_by_key(data, target):
         if isinstance(value, dict):
             yield from find_by_key(value, target)
         elif key == target:
-        	yield value
+            yield value
+
 
 def generate_multiline_geojson(data):
-	mutiline = []
-	filedata = ''
+    multiline = []
+    filedata = ''
 
-	for index, x in enumerate(data[1::2]):
-		mutiline.append([[data[index]["GPS (Lat.) [deg]"], data[index]["GPS (Long.) [deg]"]],[data[index + 1]["GPS (Lat.) [deg]"], data[index + 1]["GPS (Long.) [deg]"]]])
+    for index, x in enumerate(data[1::2]):
+        multiline.append([
+            [data[index][0], data[index][1]],
+            [data[index + 1][0], data[index + 1][1]]
+        ])
 
-	filedata = f'{{"type": "FeatureCollection","features": [{{"type": "Feature","geometry": {{"type": "MultiLineString","coordinates": {mutiline}}},"properties": {{"prop0": "value0"}}}}]}}'
+    filedata = f'{{"type": "FeatureCollection","features": [{{"type": "Feature","geometry": {{"type": "MultiLineString","coordinates": {multiline}}},"properties": {{"prop0": "value0"}}}}]}}'
 
-	f = open(f"./multiline.geojson", "w")
-	f.write(filedata)
-	f.close()
+    f = open(f"./multiline.geojson", "w")
+    f.write(filedata)
+    f.close()
 
-def main():
-	if not args.file:
-		print("Please provide the telemetry filename (in base directory) using the -f flag, e.g. python3 generategeojson.py -f mytelemetry.json")
-		exit()
 
-	with open(f'./{args.file}') as json_file:
-		data = json.load(json_file)
-		linestring = []
+def get_data():
+    if not args.file:
+        print("Please provide the telemetry filename (in base directory) using the -f flag, e.g. python3 generategeojson.py -f mytelemetry.json")
+        exit()
 
-		for x in find_by_key(data, "samples"):
-			data = x
+    with open(f'./{args.file}') as json_file:
+        data = json.load(json_file)
+        linestring = []
 
-		for x in data:
-			linestring.append(
-				[x['GPS (Lat.) [deg]'], x['GPS (Long.) [deg]']]
-			)
+        for x in find_by_key(data, "samples"):
+            data = x
 
-		try: 
-			os.mkdir(f"./{files_dir}") 
-		except OSError as error: 
-			print(error)  
+        for x in data:
+            linestring.append(
+                [x['GPS (Lat.) [deg]'], x['GPS (Long.) [deg]']]
+            )
 
-		generate_multiline_geojson(data)
+        generate_multiline_geojson(linestring)
 
-		for index, x in enumerate(data):
-			f = open(f"./{files_dir}/{index:06}.geojson", "x")
+        return [
+            {
+                "type": "Point",
+                "coordinates": [
+                    line[0],
+                    line[1],
+                ],
+            }
+            for line in linestring
+        ]
 
-			filedata = f'{{"type": "Point","coordinates": {[x["GPS (Lat.) [deg]"], x["GPS (Long.) [deg]"]]}}}'
-			f.write(filedata)
-			f.close()
 
 if __name__ == '__main__':
-	main()
+    get_data()
