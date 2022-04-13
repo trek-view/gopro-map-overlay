@@ -4,27 +4,33 @@ Use GoPro telemetry to generate a picture-in-picture map.
 
 ## Usage
 
-0. Install required packages `pip3 install -r requirements.txt`
-1. First extract the telemetry file (as json) from your GoPro video using [gopro-telemetry](https://github.com/JuanIrache/gopro-telemetry/). [Detailed instructions about how to do this can be found in this post](https://www.trekview.org/blog/2022/gopro-telemetry-exporter-getting-started/).
+0. First extract the telemetry file (as json) from your GoPro video using [gopro-telemetry](https://github.com/JuanIrache/gopro-telemetry/). [Detailed instructions about how to do this can be found in this post](https://www.trekview.org/blog/2022/gopro-telemetry-exporter-getting-started/).
+1. Install required packages `pip3 install -r requirements.txt`
 2. Fill in the `variables.txt` with your Mapbox API Key and username, and other variables if needed.
-3. Run `python3 main.py -f TELEMETRY.json`. This will generate a `multiline.geojson` file, upload it to a new style in your Mapbox accountg and generate .jpg map images in the directory `mapbox-images/`.
-4. Image overlay on video TODO
+3. Run `python3 main.py -f TELEMETRY.json`, replacing `TELEMETRY.json` with the file created at step 0. This will generate a `multiline.geojson` file, upload it to a new style in your Mapbox accountg and generate .jpg map images in the directory `mapbox-images/`.
 
-## Variable
+### `variables.txt`
 
-TODO
+To run the script you need to set the required variables (and optional variables if you don't want to use defaults):
 
-To run the script you need to set the following variables:
-
-* `mapbox_key`: your MapBox API key. [You can get a MapBox API key here](https://account.mapbox.com/) that will allow you [50,000 free static image lookups each month](https://www.mapbox.com/pricing/#glstatic).
-`mapbox_username`: you MapBox username/account name. [You can see this under your account settings in MapBox](https://account.mapbox.com/)
+* `mapbox_key` (required): your MapBox API key. [You can get a MapBox API key here](https://account.mapbox.com/) that will allow you [50,000 free static image lookups each month](https://www.mapbox.com/pricing/#glstatic).
+    * Default: null
+* `mapbox_username` (required): you MapBox username/account name. [You can see this under your account settings in MapBox](https://account.mapbox.com/)
+    * Default: null
 * `mapbox_base_style`: [Set your basemap style](https://studio.mapbox.com/styles). Options are: `streets`, `outdoors`, `satellite`, `satellite_streets`, `light`, `dark`
+    * Default: `outdoors`
 * `mapbox_img_w`: defines the width of the image for overlay. Recommended is 20% of video input width. Image height will be generated automatically based of 4:3 resolution.
+    * Default: `500`
 * `mapbox_zoom_level`: the zoom level for the map (recommended between 8-10). [See MapBox docs for more](https://docs.mapbox.com/help/glossary/zoom-level/).
-* `mapbox_marker_colour_hex`: the colour you want for the map point, passed as a 6 digit hex code (e.g. `000000` for black)
+    * Default: 10
 * `mapbox_line_colour_hex`: the colour you want for the line passed as a 6 digit hex code
+        * Default: `E48241`
+* `mapbox_marker_colour_hex`: the colour you want for the map point, passed as a 6 digit hex code (e.g. `000000` for black)
+    * Default: `000000`
 * `video_overlay_l_offset`: Left pixel padding
+    * Default: 40% of video width
 * `video_overlay_t_offset`: Top pixel padding
+    * Default: 60% of video width
 
 ## Sample varible for common GoPro video sizes
 
