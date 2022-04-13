@@ -6,13 +6,9 @@ Use GoPro telemetry to generate a picture-in-picture map.
 
 0. Install required packages `pip3 install -r requirements.txt`
 1. First extract the telemetry file (as json) from your GoPro video using [gopro-telemetry](https://github.com/JuanIrache/gopro-telemetry/). [Detailed instructions about how to do this can be found in this post](https://www.trekview.org/blog/2022/gopro-telemetry-exporter-getting-started/).
-2. Run the `python3 generategeojson.py -f TELEMETRY.json` to create the `.geojson` files from the data set (making sure to replace `TELEMETRY.json` with the telemetry file created at step 1). This will create of sequentially numbered `.geojson` files for each GPS time/lat/lon in the telemetry file in the directory `geojson-files/`.
-3. The `multiline.geojson` file generated contains the multiline for the entire path in the dataset, and [should be uploaded as a layer for a custom style on MapBox here](https://studio.mapbox.com/styles).
-4. Open the `geojsonrequest.py` and:
-  * paste in your MapBox API key into the `access_key` variable. 
-  * paste in your username and layer replacing the default `trekview/cl1nbz22z002614pn626zhm7u`.
-5. Run `python3 geojsonrequest.py`. This will generate .jpg map images in the directory `mapbox-images/`.
-6. Image overlay on video TODO
+2. Fill in the `variables.txt` with your Mapbox API Key and username, and other variables if needed.
+3. Run `python3 main.py -f TELEMETRY.json`. This will generate a `multiline.geojson` file, upload it to a new style in your Mapbox accountg and generate .jpg map images in the directory `mapbox-images/`.
+4. Image overlay on video TODO
 
 ## Variable
 
@@ -35,9 +31,9 @@ To run the script you need to set the following variables:
 
 1. Automate step 3 by creating a mapbox style programatically
 2. Merge step 2 and 3 into a single command
-3. Add variables to MapBox Scripts (mapbox_img_w - as shown 
-2. Add the final logic to overlay mapbox images on video
-3. Bundle everything into a single script, taking `variables.txt` and an input json via the command line.
+3. Add variables to MapBox Scripts
+4. Add the final logic to overlay mapbox images on video (to not be done yet)
+5. Bundle everything into a single script, taking `variables.txt` and an input json via the command line.
 
 ## Overlay Scripts
 
