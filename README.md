@@ -7,7 +7,7 @@ Use GoPro telemetry to generate a picture-in-picture map.
 0. First extract the telemetry file (as json) from your GoPro video using [gopro-telemetry](https://github.com/JuanIrache/gopro-telemetry/). [Detailed instructions about how to do this can be found in this post](https://www.trekview.org/blog/2022/gopro-telemetry-exporter-getting-started/).
 1. Install required packages `pip3 install -r requirements.txt`
 2. Fill in the `variables.txt` with your Mapbox API Key and username, and other variables if needed.
-3. Run `python3 main.py -f TELEMETRY.json`, replacing `TELEMETRY.json` with the file created at step 0. This will generate a `multiline.geojson` file, upload it to a new style in your Mapbox accountg and generate .jpg map images in the directory `mapbox-images/`.
+3. Run `python3 main.py -f TELEMETRY.json`, replacing `TELEMETRY.json` with the file created at step 0. This will generate a `multiline.geojson` file, upload it to a new style in your Mapbox accountg and generate .jpg map images in the directory `mapbox-images/`. This process will happen at `services/geojson_service/generate_images()`.
 
 ### `variables.txt`
 
