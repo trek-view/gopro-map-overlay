@@ -1,10 +1,10 @@
-mapbox_key: sk.eyJ1IjoiZGF2aWRtYXJjb3NnOTgiLCJhIjoiY2wxeTI5ZDA1MDdwNzNubGU2ZWFkMDF1aiJ9.VfRl7BCG3Qf7vceWYOnA0g
-mapbox_username: davidmarcosg98
-mapbox_base_style: mapbox/dark-v10
+mapbox_key: 
+mapbox_username: 
+mapbox_base_style: 
 mapbox_user_style: 
-mapbox_zoom_level: 17
-mapbox_img_w: 500
-mapbox_marker_colour_hex: 3bb2d0
-mapbox_line_colour_hex: ffffff
+mapbox_zoom_level: 
+mapbox_img_w: 
+mapbox_marker_colour_hex: 
+mapbox_line_colour_hex: 
 video_overlay_l_offset_pc:
 video_overlay_t_offset_pc:
