@@ -17,8 +17,9 @@ To run the script you need to set the required variables (and optional variables
     * Default: null
 * `mapbox_username` (required): you MapBox username/account name. [You can see this under your account settings in MapBox](https://account.mapbox.com/)
     * Default: null
-* `mapbox_base_style`: [Set your basemap style](https://studio.mapbox.com/styles). Options are: `streets`, `outdoors`, `satellite`, `satellite_streets`, `light`, `dark`
+* `mapbox_base_style`: [Set your basemap style](https://docs.mapbox.com/api/maps/styles/). Options are: `streets`, `outdoors`, `satellite`, `satellite_streets`, `light`, `dark`
     * Default: `outdoors`
+* `mapbox_user_style`:
 * `mapbox_img_w`: defines the width of the image for overlay. Recommended is 20% of video input width. Image height will be generated automatically based of 4:3 resolution.
     * Default: `500`
 * `mapbox_zoom_level`: the zoom level for the map (recommended between 8-10). [See MapBox docs for more](https://docs.mapbox.com/help/glossary/zoom-level/).
@@ -48,7 +49,12 @@ video_overlay_l_offset_pc:
 video_overlay_t_offset_pc:
 ```
 
+`python3 main.py -f GS018422-gps-only.json`
+
 ### 360 video @ 5.6k
+
+
+`python3 main.py -f GS018422.json`
 
 
 ## Todo 
