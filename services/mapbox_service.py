@@ -15,6 +15,7 @@ from settings import (
     MAPBOX_LINE_COLOUR_HEX,
     MAPBOX_MARKER_COLOUR_HEX,
     MAPBOX_USERNAME,
+    MAPBOX_ZOOM_LEVEL,
 )
 
 upload_service = Uploader(access_token=MAPBOX_KEY)
@@ -104,7 +105,7 @@ def generate_image(coords, style):
     r = requests.get(
         (
             f"https://api.mapbox.com/styles/v1/{MAPBOX_USERNAME}/{style}/"
-            f"static/pin-s{f'-{marker_label}' if marker_label else ''}+{MAPBOX_MARKER_COLOUR_HEX or 'ffffff'}({coords[0]},{coords[1]})/{coords[0]}, {coords[1]},17/"
+            f"static/pin-s{f'-{marker_label}' if marker_label else ''}+{MAPBOX_MARKER_COLOUR_HEX or 'ffffff'}({coords[0]},{coords[1]})/{coords[0]}, {coords[1]},{MAPBOX_ZOOM_LEVEL}/"
             f"{MAPBOX_IMG_W}x{MAPBOX_IMG_H}?access_token={MAPBOX_KEY}"
         )
     )

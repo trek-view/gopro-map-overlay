@@ -1,6 +1,6 @@
-mapbox_key: 
-mapbox_username: 
-mapbox_base_style: 
+mapbox_key: sk.eyJ1IjoiZGF2aWRtYXJjb3NnOTgiLCJhIjoiY2wyMGJoeGd4MHAxeTNjb2FjMjM3dzN2NSJ9.rWMOIuchq-BL6lTZ4JWVIQ
+mapbox_username: davidmarcosg98
+mapbox_base_style: mapbox/dark-v10
 mapbox_user_style: 
 mapbox_zoom_level: 
 mapbox_img_w: 

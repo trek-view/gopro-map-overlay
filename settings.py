@@ -17,5 +17,7 @@ if not MAPBOX_IMG_W:
     MAPBOX_IMG_W = 500
 MAPBOX_IMG_H = int(MAPBOX_IMG_W * 3 / 4)
 
+if not MAPBOX_ZOOM_LEVEL:
+    MAPBOX_ZOOM_LEVEL = 17
 if not MAPBOX_BASE_STYLE:
     MAPBOX_BASE_STYLE = "mapbox/dark-v10"
