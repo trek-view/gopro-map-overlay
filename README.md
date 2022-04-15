@@ -13,7 +13,7 @@ Use GoPro telemetry to generate a picture-in-picture map.
 
 To run the script you need to set the required variables (and optional variables if you don't want to use defaults):
 
-* `mapbox_key` (required): your MapBox API key. [You can get a MapBox API key here](https://account.mapbox.com/) that will allow you [50,000 free static image lookups each month](https://www.mapbox.com/pricing/#glstatic).
+* `mapbox_key` (required): your MapBox API key. [You can get a MapBox API key here](https://account.mapbox.com/) that will allow you [50,000 free static image lookups each month](https://www.mapbox.com/pricing/#glstatic). Ensure your key has the following permissions when you create it; `Styles:Tiles`, `Styles:Read`, `Fonts:Read`, `Datasets:Read`, `Vision:Read`, `Uploads:Read`, `Uploads:List`, `Uploads:Write`, `Tilesets:Read`, `Tilesets:List` and `Tilesets:Write`
     * Default: null
 * `mapbox_username` (required): you MapBox username/account name. [You can see this under your account settings in MapBox](https://account.mapbox.com/)
     * Default: null
