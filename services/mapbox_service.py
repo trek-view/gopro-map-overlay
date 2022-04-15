@@ -32,8 +32,7 @@ def get_style_layers():
 
 
 def create_base_style():
-    if not tileset_exists():
-        upload_geojson_as_tileset("multiline.geojson")
+    upload_geojson_as_tileset("multiline.geojson")
     layer = {
         "id": "telemetry",
         "source": "gopro-multiline",
@@ -122,6 +121,10 @@ def tileset_exists():
     # TODO implement similar method for style creation
     """
     uploads = upload_service.list().json()
+    if uploads == {"message": "Unauthorized"}:
+        raise ValueError(
+            "Your Mapbox API Key is not valid. The token must have permissions for Tilesets:Read, Tilesets:List and Tilesets:Write"
+        )
     for upload in uploads:
         if upload.get("name") == MULTILINE_TILESET_ID and upload["complete"]:
             return True

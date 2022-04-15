@@ -62,7 +62,10 @@ def get_data(file: str):
             data = x
 
         for x in data:
-            linestring.append([x["GPS (Lat.) [deg]"], x["GPS (Long.) [deg]"]])
+            if "GPS (Lat.) [deg]" in x:
+                linestring.append([x["GPS (Lat.) [deg]"], x["GPS (Long.) [deg]"]])
+            else:
+                linestring.append([x["value"][1], x["value"][0]])
 
         generate_multiline_geojson(linestring)
         return linestring
