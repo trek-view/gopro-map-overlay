@@ -19,7 +19,8 @@ To run the script you need to set the required variables (and optional variables
     * Default: null
 * `mapbox_base_style`: [Set your basemap style](https://docs.mapbox.com/api/maps/styles/). Options include (but not limited to): `mapbox/streets-v11`, `mapbox/outdoors-v11`, `mapbox/satellite-v9`, and `mapbox/satellite-streets-v11`
     * Default: `mapbox/outdoors-v11`
-* `mapbox_user_style`:
+* `mapbox_user_style`: If you want to reuse a previous style you can pass it here like so `trekview/cl20cn42p009i15o97k316e8u` (this variable is not needed 99% of the time).
+    * Default: null
 * `mapbox_img_w`: defines the width of the image for overlay. Recommended is 20% of video input width. Image height will be generated automatically based of 4:3 resolution.
     * Default: `500`
 * `mapbox_zoom_level`: the zoom level for the map (recommended between 8-10). [See MapBox docs for more](https://docs.mapbox.com/help/glossary/zoom-level/). In short, the higher the zoom number, the closer to the ground the zoom is.
