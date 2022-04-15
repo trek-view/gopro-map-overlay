@@ -17,8 +17,8 @@ To run the script you need to set the required variables (and optional variables
     * Default: null
 * `mapbox_username` (required): you MapBox username/account name. [You can see this under your account settings in MapBox](https://account.mapbox.com/)
     * Default: null
-* `mapbox_base_style`: [Set your basemap style](https://docs.mapbox.com/api/maps/styles/). Options are: `streets`, `outdoors`, `satellite`, `satellite_streets`, `light`, `dark`
-    * Default: `outdoors`
+* `mapbox_base_style`: [Set your basemap style](https://docs.mapbox.com/api/maps/styles/). Options include (but not limited to): `mapbox/streets-v11`, `mapbox/outdoors-v11`, `mapbox/satellite-v9`, and `mapbox/satellite-streets-v11`
+    * Default: `mapbox/outdoors-v11`
 * `mapbox_user_style`:
 * `mapbox_img_w`: defines the width of the image for overlay. Recommended is 20% of video input width. Image height will be generated automatically based of 4:3 resolution.
     * Default: `500`
