@@ -30,11 +30,11 @@ def generate_images(style, images_data):
 
 # Find the samples value in dict
 def find_by_key(data, target):
+    if target in data.keys():
+        return data[target]
     for key, value in data.items():
         if isinstance(value, dict):
-            yield from find_by_key(value, target)
-        elif key == target:
-            yield value
+            return find_by_key(value, target)
 
 
 def generate_multiline_geojson(data):
@@ -58,8 +58,7 @@ def get_data(file: str):
         data = json.load(json_file)
         linestring = []
 
-        for x in find_by_key(data, "samples"):
-            data = x
+        data = find_by_key(data, "GPS5").get("samples", [])
 
         for x in data:
             if "GPS (Lat.) [deg]" in x:
