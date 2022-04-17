@@ -4,7 +4,7 @@ with open("variables.txt", "r") as f:
         if value.isdigit():
             value = int(value)
         key = variable.split(":")[0]
-        vars()[key.upper()] = value or ""
+        vars()[key.upper()] = value
 
 REQUIRED_VARIABLES = ["mapbox_username", "mapbox_key", "mapbox_username"]
 
