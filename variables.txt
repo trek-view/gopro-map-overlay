@@ -1,9 +1,12 @@
-mapbox_key: sk.eyJ1IjoiZGF2aWRtYXJjb3NnOTgiLCJhIjoiY2wyMWwzMWdiMTc0dDNjbWtxaW1vNDV1NyJ9.c-nkU-5q0Jjha5NegwNJbQ
-mapbox_username: davidmarcosg98
-mapbox_base_style: mapbox/dark-v10
+mapbox_key: 
+mapbox_username:
+mapbox_base_style:
 mapbox_user_style: 
-mapbox_marker_label: triangle 
+mapbox_marker_label:
 mapbox_zoom_level: 
+mapbox_marker_colour_hex:
+mapbox_line_colour_hex:
+mapbox_line_width:
 mapbox_img_w: 
 mapbox_line_width:
 video_overlay_l_offset_pc:
