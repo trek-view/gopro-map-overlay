@@ -22,7 +22,7 @@ To run the script you need to set the required variables (and optional variables
 * `mapbox_user_style`: If you want to reuse a previous style you can pass it here like so `trekview/cl20cn42p009i15o97k316e8u` (this variable is not needed 99% of the time).
     * Default: null
 * `mapbox_marker_label`: You can add a label inside the marker. It can be a digit (0-9), a letter (a-z) or a Maki icon (without svg extension, i.e: circle): https://labs.mapbox.com/maki-icons/`.
-    * Default: null
+    * Default: ''
 * `mapbox_img_w`: defines the width of the image for overlay. Recommended is 20% of video input width. Image height will be generated automatically based of 4:3 resolution.
     * Default: `500`
 * `mapbox_zoom_level`: the zoom level for the map (recommended between 8-10). [See MapBox docs for more](https://docs.mapbox.com/help/glossary/zoom-level/). In short, the higher the zoom number, the closer to the ground the zoom is.
