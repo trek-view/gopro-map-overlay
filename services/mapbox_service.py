@@ -34,7 +34,7 @@ def get_style_layers():
 
 
 def create_base_style():
-    # upload_geojson_as_tileset("multiline.geojson")
+    upload_geojson_as_tileset("multiline.geojson")
     layer = {
         "id": "telemetry",
         "source": "gopro-multiline",
