@@ -4,7 +4,7 @@ with open("variables.txt", "r") as f:
         if value.isdigit():
             value = int(value)
         key = variable.split(":")[0]
-        vars()[key.upper()] = value
+        vars()[key.upper()] = value or ""
 
 REQUIRED_VARIABLES = ["mapbox_username", "mapbox_key", "mapbox_username"]
 
@@ -19,6 +19,7 @@ MAPBOX_IMG_H = int(MAPBOX_IMG_W * 3 / 4)
 
 MAPBOX_LINE_COLOUR_HEX = str(MAPBOX_LINE_COLOUR_HEX).replace("#", "")
 MAPBOX_MARKER_COLOUR_HEX = str(MAPBOX_MARKER_COLOUR_HEX).replace("#", "")
+MAPBOX_MARKER_LABEL = str(MAPBOX_MARKER_LABEL).replace(".svg", "")
 if not MAPBOX_ZOOM_LEVEL:
     MAPBOX_ZOOM_LEVEL = 17
 if not MAPBOX_BASE_STYLE:
