@@ -5,7 +5,6 @@ mapbox_user_style:
 mapbox_marker_label: triangle 
 mapbox_zoom_level: 
 mapbox_img_w: 
-mapbox_marker_colour_hex: e84733
-mapbox_line_colour_hex: ffffff
+mapbox_line_width:
 video_overlay_l_offset_pc:
 video_overlay_t_offset_pc:

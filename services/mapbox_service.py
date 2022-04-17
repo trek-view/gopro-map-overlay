@@ -13,6 +13,7 @@ from settings import (
     MAPBOX_IMG_W,
     MAPBOX_KEY,
     MAPBOX_LINE_COLOUR_HEX,
+    MAPBOX_LINE_WIDTH,
     MAPBOX_MARKER_COLOUR_HEX,
     MAPBOX_MARKER_LABEL,
     MAPBOX_USERNAME,
@@ -40,7 +41,10 @@ def create_base_style():
         "source": "gopro-multiline",
         "source-layer": MULTILINE_TILESET_ID,
         "type": "line",
-        "paint": {"line-color": f'#{MAPBOX_LINE_COLOUR_HEX or "000000"}'},
+        "paint": {
+            "line-color": f'#{MAPBOX_LINE_COLOUR_HEX or "000000"}',
+            "line-width": MAPBOX_LINE_WIDTH or 1,
+        },
     }
     # we get the default layers from saved files, as the API doesn't allow us to use templates as we do in Mapbox Studio
     # more templates should be added, selectable with variables.txt
