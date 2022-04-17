@@ -14,6 +14,7 @@ from settings import (
     MAPBOX_KEY,
     MAPBOX_LINE_COLOUR_HEX,
     MAPBOX_MARKER_COLOUR_HEX,
+    MAPBOX_MARKER_LABEL,
     MAPBOX_USERNAME,
     MAPBOX_ZOOM_LEVEL,
 )
@@ -33,7 +34,7 @@ def get_style_layers():
 
 
 def create_base_style():
-    upload_geojson_as_tileset("multiline.geojson")
+    # upload_geojson_as_tileset("multiline.geojson")
     layer = {
         "id": "telemetry",
         "source": "gopro-multiline",
@@ -100,12 +101,10 @@ def upload_geojson_as_tileset(geojson: str):
 
 
 def generate_image(coords, style):
-    marker_label = ""  # marker label can be empty, a letter, a number, or a MAKI icon: https://labs.mapbox.com/maki-icons/
-
     r = requests.get(
         (
             f"https://api.mapbox.com/styles/v1/{MAPBOX_USERNAME}/{style}/"
-            f"static/pin-s{f'-{marker_label}' if marker_label else ''}+{MAPBOX_MARKER_COLOUR_HEX or 'ffffff'}({coords[0]},{coords[1]})/{coords[0]}, {coords[1]},{MAPBOX_ZOOM_LEVEL}/"
+            f"static/pin-s{f'-{MAPBOX_MARKER_LABEL}'}+{MAPBOX_MARKER_COLOUR_HEX or 'ffffff'}({coords[0]},{coords[1]})/{coords[0]}, {coords[1]},{MAPBOX_ZOOM_LEVEL}/"
             f"{MAPBOX_IMG_W}x{MAPBOX_IMG_H}?access_token={MAPBOX_KEY}"
         )
     )
