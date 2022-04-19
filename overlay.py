@@ -99,6 +99,10 @@ stream = ffmpeg.overlay(stream, overlay, x="2*W/100", y="H-h-2*H/100")
 
 stream = ffmpeg.output(stream, outpath)
 
+print("======= FFMPEG COMMAND =======")
+print(' '.join(ffmpeg.compile(stream)))
+print("===== FFMPEG COMMAND END =====")
+
 # WARNING: will throw error if there are too many images on windows (command line argument too long)
 ffmpeg.run(stream)
 
