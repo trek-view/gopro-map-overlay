@@ -1,6 +1,13 @@
-mapbox_key:
+mapbox_key: 
+mapbox_username:
 mapbox_base_style:
-mapbox_img_w:
-mapbox_zoom_level:
+mapbox_user_style: 
+mapbox_marker_label:
+mapbox_zoom_level: 
+mapbox_marker_colour_hex:
+mapbox_line_colour_hex:
+mapbox_line_width:
+mapbox_img_w: 
+mapbox_line_width:
 video_overlay_l_offset_pc:
 video_overlay_t_offset_pc:
