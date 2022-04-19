@@ -21,16 +21,18 @@ To run the script you need to set the required variables (and optional variables
     * Default: `mapbox/outdoors-v11`
 * `mapbox_user_style`: If you want to reuse a previous style you can pass it here like so `trekview/cl20cn42p009i15o97k316e8u` (this variable is not needed 99% of the time).
     * Default: null
-* `mapbox_marker_label`: You can add a label inside the marker. It can be a digit (0-9), a letter (a-z) or a Maki icon (without svg extension, i.e: circle): https://labs.mapbox.com/maki-icons/`.
+* `mapbox_marker_label`: You can add a label inside the marker. It can be a digit (0-9), a letter (a-z) or a Maki icon (without svg extension, i.e: circle). [List of available icons](https://labs.mapbox.com/maki-icons/).
     * Default: ''
 * `mapbox_img_w`: defines the width of the image for overlay. Recommended is 20% of video input width. Image height will be generated automatically based of 4:3 resolution.
     * Default: `500`
-* `mapbox_zoom_level`: the zoom level for the map (recommended between 8-10). [See MapBox docs for more](https://docs.mapbox.com/help/glossary/zoom-level/). In short, the higher the zoom number, the closer to the ground the zoom is.
+* `mapbox_zoom_level`: the zoom level for the map (recommended between 8-10). [See MapBox docs for more](https://docs.mapbox.com/help/glossary/zoom-level/). Between 0 and 22. In short, the higher the zoom number, the closer to the ground the zoom is.
     * Default: 10
 * `mapbox_line_colour_hex`: the colour you want for the line passed as a 6 digit hex code
         * Default: `E48241`
 * `mapbox_marker_colour_hex`: the colour you want for the map point, passed as a 6 digit hex code (e.g. `000000` for black)
     * Default: `000000`
+* `mapbox_line_width`: the width in pixels for the linestring.
+      * Default: `1`  
 * `video_overlay_l_offset`: Left pixel padding
     * Default: 40% of video width
 * `video_overlay_t_offset`: Top pixel padding
