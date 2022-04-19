@@ -25,20 +25,24 @@ if len(sys.argv) == 5:
 
 def create_overlay(geojson):
     global work_dir
+
+    # Get images list from image directory
     image_list = [f for f in listdir(image_dir) if isfile(join(image_dir, f))]
     image_len = len(image_list)
-    sec = 0
+
+    # Get map image dimension
     geopoints = geojson["1"]["streams"]["GPS5"]["samples"]
     geo_i = 0
     map_overlay = cv2.imread(image_dir+("/%06d"%geo_i)+".png")
-
     height, width, layers = map_overlay.shape
 
+    # Initialize variables
     fps = geojson['frames/second']
     interval = 1000/fps
     ms = 0
     cur_frame = 0
     frames = 0
+    sec = 0
 
     images = []
     cur_point = geopoints[0]
@@ -98,14 +102,27 @@ overlay = ffmpeg.input(work_dir+'/overlay.mp4')
 stream = ffmpeg.overlay(stream, overlay, x="2*W/100", y="H-h-2*H/100")
 
 stream = ffmpeg.output(stream, outpath)
+cmd = ffmpeg.compile(stream)
+
+# get all streams and copy them to output
+# retain original video's stream order
+# remove video stream from existing command
+cmd.remove('-map')
+cmd.remove('[s0]')
+# probe input video for the streams
+streams = ffmpeg.probe(videopath)['streams']
+stream_maps = []
+# copy streams without messing with the order
+for s in streams:
+    cmd.insert( len(cmd) - 1, "-map" )
+    if s['codec_type'] != 'video':
+        cmd.insert( len(cmd) - 1, "0:%d" % s['index'] )
+    else:
+        cmd.insert( len(cmd) - 1, "[s0]" )
 
 print("======= FFMPEG COMMAND =======")
-print(' '.join(ffmpeg.compile(stream)))
+print(' '.join(cmd))
 print("===== FFMPEG COMMAND END =====")
 
-# WARNING: will throw error if there are too many images on windows (command line argument too long)
-ffmpeg.run(stream)
-
-# Workaround Ideas:
-# 1. Create frames using opencv and pack it back using ffmpeg, combine with original audio (opencv cannot handle audio)
-# 2. Use option --filter_complex_script from ffmpeg to pass filter options, and also use %d on input option to abbreviate the commands.
+# execute ffmpeg command
+os.system(' '.join(cmd))
