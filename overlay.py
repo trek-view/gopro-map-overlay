@@ -95,7 +95,7 @@ if not isExist:
 
 create_overlay(geojson)
 
-# get main video
+# get main video annd overlay
 stream = ffmpeg.input(videopath)
 overlay = ffmpeg.input(work_dir+'/overlay.mp4')
 
