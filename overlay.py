@@ -64,7 +64,7 @@ def create_overlay(geojson):
         cur_frame += 1
         ms += interval
 
-        if cur_frame == 30:
+        if cur_frame == fps:
             cur_frame = 0
             sec += 1
             ms = sec * 1000
