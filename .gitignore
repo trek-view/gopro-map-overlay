@@ -163,4 +163,4 @@ cython_debug/
 /mapbox-images
 *.json
 .DS_Store
-./outfile
+./outfile/
