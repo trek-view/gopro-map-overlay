@@ -10,3 +10,5 @@ mapbox_line_width:
 mapbox_img_w: 
 video_overlay_l_offset_pc:
 video_overlay_t_offset_pc:
+video_overlay_l_margin_pc:
+video_overlay_t_margin_pc:
