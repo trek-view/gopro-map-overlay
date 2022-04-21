@@ -8,7 +8,6 @@ mapbox_marker_colour_hex:
 mapbox_line_colour_hex:
 mapbox_line_width:
 mapbox_img_w: 
-video_overlay_l_offset_pc:
-video_overlay_t_offset_pc:
-video_overlay_l_margin_pc:
-video_overlay_t_margin_pc:
+mapbox_img_h:
+video_overlay_b_offset:
+video_overlay_l_offset:
