@@ -23,10 +23,10 @@ To run the script you need to set the required variables (and optional variables
     * Default: ''
 * `mapbox_marker_label`: You can add a label inside the marker. It can be a digit (0-9), a letter (a-z) or a Maki icon (without svg extension, i.e: circle). [List of available icons](https://labs.mapbox.com/maki-icons/).
     * Default: ''
-* `mapbox_img_w`: defines the width of the image for overlay as a percentage of input video. 
+* TODO `mapbox_img_w`: defines the width of the image for overlay as a percentage of input video. 
         * `20`% of input video width (for HERO)
         * `10`% of input video width (for equirectangular)
-* `mapbox_img_h`: defines the height of the image for overlay as a percentage of input video. 
+* TODO `mapbox_img_h`: defines the height of the image for overlay as a percentage of input video. 
         * `20`% of input video width (for HERO)
         * `10`% of input video width (for equirectangular)
 * `mapbox_zoom_level`: the zoom level for the map (recommended between 8-10). [See MapBox docs for more](https://docs.mapbox.com/help/glossary/zoom-level/). Between 0 and 22. In short, the higher the zoom number, the closer to the ground the zoom is.
@@ -37,11 +37,11 @@ To run the script you need to set the required variables (and optional variables
     * Default: #`000000`
 * `mapbox_line_width`: the width in pixels for the linestring.
       * Default: `1`px  
-* `video_overlay_b_offset`:
+* TODO `video_overlay_b_offset`:
     * Default:
         * `2`% video height (for HERO)
         * `30`% video height (for equirectangular)
-* `video_overlay_l_offset`:
+* TODO `video_overlay_l_offset`:
     * Default:
         * `2`% video width (for HERO)
         * `30`% video height (for equirectangular)
