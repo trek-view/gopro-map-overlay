@@ -162,3 +162,4 @@ cython_debug/
 .DS_Store
 .outfile/
 *.geojson
+exiftool.exe

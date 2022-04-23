@@ -6,16 +6,11 @@ with open("variables.txt", "r") as f:
         key = variable.split(":")[0]
         vars()[key.upper()] = value
 
-REQUIRED_VARIABLES = ["mapbox_username", "mapbox_key", "mapbox_username", "input_video_mode"]
+REQUIRED_VARIABLES = ["mapbox_username", "mapbox_key", "mapbox_username"]
 
 for var in REQUIRED_VARIABLES:
     if var.upper() not in vars():
         raise ValueError(f"Mapbox {var} missing in the variables.txt file.")
-
-# Height calculated using 4:3 ratio
-if not MAPBOX_IMG_W:
-    MAPBOX_IMG_W = 500
-MAPBOX_IMG_H = int(MAPBOX_IMG_W * 3 / 4)
 
 MAPBOX_LINE_COLOUR_HEX = str(MAPBOX_LINE_COLOUR_HEX).replace("#", "")
 MAPBOX_MARKER_COLOUR_HEX = str(MAPBOX_MARKER_COLOUR_HEX).replace("#", "")
@@ -25,22 +20,27 @@ if not MAPBOX_ZOOM_LEVEL:
 if not MAPBOX_BASE_STYLE:
     MAPBOX_BASE_STYLE = "mapbox/dark-v10"
 
-# Video mode: HERO or 360
-if not INPUT_VIDEO_MODE:
-    INPUT_VIDEO_MODE = "HERO"
 
-# FFMPEG overlay's x and y settings to position the overlay based on INPUT_VIDEO_MODE
+# Video mode: HERO or 360
+if "INPUT_VIDEO_MODE" not in vars():
+    INPUT_VIDEO_MODE = "CUSTOM"
+
+# x and y offset (ratio to width and height)
 OVERLAY_OFFSETS = {
     "HERO" : {
         # 2% from left, 2% from bottom
-        "x": "2*W/100",
-        "y": "H-h-2*H/100"
+        "x": 0.02,
+        "y": 0.02
     },
     "360" : {
-        # 10% from left, 10% from bottom
-        "x": "10*W/100",
-        "y": "H-h-10*H/100"
+        # 30% from left, 30% from bottom
+        "x": 0.3,
+        "y": 0.3
     },
+    "CUSTOM" : {
+        "x": VIDEO_OVERLAY_L_OFFSET,
+        "y": VIDEO_OVERLAY_B_OFFSET
+    }
 }
 
 # mapbox overlay's dimension setting with ratio to input video's dimensions
@@ -55,10 +55,24 @@ OVERLAY_RATIO = {
         "w": 0.1,
         "h": 0.1
     },
+    "CUSTOM" : {
+        "w": MAPBOX_IMG_W,
+        "h": MAPBOX_IMG_H
+    }
 }
 
-def set_overlay_dimensions(w, h):
+def set_overlay_settings(w, h, mode):
     global MAPBOX_IMG_H
     global MAPBOX_IMG_W
-    MAPBOX_IMG_H = h
-    MAPBOX_IMG_W = w
+    global INPUT_VIDEO_MODE
+
+    if not MAPBOX_IMG_H:
+        INPUT_VIDEO_MODE = mode
+        MAPBOX_IMG_H = h
+        MAPBOX_IMG_W = w
+    else:
+        MAPBOX_IMG_H = int(MAPBOX_IMG_H)
+        MAPBOX_IMG_W = int(MAPBOX_IMG_W)
+    
+    if MAPBOX_IMG_H > 1280 or MAPBOX_IMG_H < 1 or MAPBOX_IMG_W > 1280 or MAPBOX_IMG_W < 1:
+        raise ValueError("MAPBOX_IMG_H and MAPBOX_IMG_W must be a number between 1 and 1280")

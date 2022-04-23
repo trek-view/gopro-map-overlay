@@ -13,8 +13,10 @@ from os.path import isfile, join
 import json
 import cv2
 import settings
-from settings import INPUT_VIDEO_MODE, OVERLAY_OFFSETS, OVERLAY_RATIO
+from settings import OVERLAY_OFFSETS, OVERLAY_RATIO
 from services.geojson_service import images_dir
+import exiftool
+import re
 
 work_dir = "./.outfile"
 
@@ -95,10 +97,23 @@ def create(jsonpath, videopath, outpath):
     stream = ffmpeg.input(videopath)
     overlay = ffmpeg.input(work_dir+'/overlay.mp4')
     
-    if INPUT_VIDEO_MODE not in OVERLAY_OFFSETS:
+    if settings.INPUT_VIDEO_MODE not in OVERLAY_OFFSETS:
         raise Error("INPUT_VIDEO_MODE is not supported. Supported modes: 'HERO', '360'.")
 
-    stream = ffmpeg.overlay(stream, overlay, **OVERLAY_OFFSETS[INPUT_VIDEO_MODE])
+    offset_x = OVERLAY_OFFSETS[settings.INPUT_VIDEO_MODE]['x']
+    if re.search("px$", str(offset_x)):
+        offset_x = offset_x.replace("px", "").strip()
+    else:
+        offset_x = "%.3f*W" % float(OVERLAY_OFFSETS[settings.INPUT_VIDEO_MODE]['x'])
+    
+    offset_y = OVERLAY_OFFSETS[settings.INPUT_VIDEO_MODE]['y']
+    if re.search("px$", str(offset_y)):
+        offset_y = offset_y.replace("px", "").strip()
+        offset_y = "H-h-%s" %offset_y
+    else:
+        offset_y = "H-h-%.3f*H" % float(OVERLAY_OFFSETS[settings.INPUT_VIDEO_MODE]['y'])
+
+    stream = ffmpeg.overlay(stream, overlay, x = offset_x, y = offset_y)
 
     stream = ffmpeg.output(stream, outpath)
     cmd = ffmpeg.compile(stream)
@@ -126,14 +141,29 @@ def create(jsonpath, videopath, outpath):
     os.system(' '.join(cmd) + " -y")
 
 def set_overlay_dimensions(videopath):
-    if INPUT_VIDEO_MODE not in OVERLAY_RATIO:
+    if settings.INPUT_VIDEO_MODE not in OVERLAY_RATIO:
         raise Error("INPUT_VIDEO_MODE is not supported. Supported modes: 'HERO', '360'.")
 
     streams = ffmpeg.probe(videopath)['streams']
     for s in streams:
         if s['codec_type'] == 'video':
-            w = round(s['width'] * OVERLAY_RATIO[INPUT_VIDEO_MODE]['w'])
-            h = round(s['height'] * OVERLAY_RATIO[INPUT_VIDEO_MODE]['h'])
-            print("Set overlay dimension to:",w,"x",h)
-            settings.set_overlay_dimensions(w,h)
+            w = round(s['width'] * OVERLAY_RATIO[settings.INPUT_VIDEO_MODE]['w'])
+            h = round(s['height'] * OVERLAY_RATIO[settings.INPUT_VIDEO_MODE]['h'])
+            
+            mode = "HERO"
+            
+            try:
+                # Get 360 tag
+                with exiftool.ExifToolAlpha() as et:
+                    projection_type = et.get_tag(videopath, "XMP-GSpherical:ProjectionType")
+                    if projection_type == "equirectangular":
+                        mode = "360"
+            except:
+                print("exiftool is not found. Automatic equirectangular video detection is disabled.")
+
+            settings.set_overlay_settings(w,h,mode)
             break
+    
+    print("Overlay settings mode:", settings.INPUT_VIDEO_MODE)
+    print("Set overlay dimension to:",OVERLAY_RATIO[settings.INPUT_VIDEO_MODE]['w'],"x",OVERLAY_RATIO[settings.INPUT_VIDEO_MODE]['h'])
+    print("Set overlay offset to:","left:%s"%(OVERLAY_OFFSETS[settings.INPUT_VIDEO_MODE]['x']),"bottom:%s"%(OVERLAY_OFFSETS[settings.INPUT_VIDEO_MODE]['y']))

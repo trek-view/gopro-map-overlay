@@ -23,12 +23,12 @@ To run the script you need to set the required variables (and optional variables
     * Default: ''
 * `mapbox_marker_label`: You can add a label inside the marker. It can be a digit (0-9), a letter (a-z) or a Maki icon (without svg extension, i.e: circle). [List of available icons](https://labs.mapbox.com/maki-icons/).
     * Default: ''
-* TODO `mapbox_img_w`: defines the width of the image for overlay as a percentage of input video. 
-        * `20`% of input video width (for HERO)
-        * `10`% of input video width (for equirectangular)
-* TODO `mapbox_img_h`: defines the height of the image for overlay as a percentage of input video. 
-        * `20`% of input video width (for HERO)
-        * `10`% of input video width (for equirectangular)
+* `mapbox_img_w`: defines the width of the image for overlay as a ratio of input video. 
+        * `0.2` (20%) of input video width (for HERO)
+        * `0.1` (10%) of input video width (for equirectangular)
+* `mapbox_img_h`: defines the height of the image for overlay as a ratio of input video. 
+        * `0.2` (20%) of input video width (for HERO)
+        * `0.1` (10%) of input video width (for equirectangular)
 * `mapbox_zoom_level`: the zoom level for the map (recommended between 8-10). [See MapBox docs for more](https://docs.mapbox.com/help/glossary/zoom-level/). Between 0 and 22. In short, the higher the zoom number, the closer to the ground the zoom is.
     * Default: `10`
 * `mapbox_line_colour_hex`: the colour you want for the line passed as a 6 digit hex code
@@ -37,14 +37,14 @@ To run the script you need to set the required variables (and optional variables
     * Default: #`000000`
 * `mapbox_line_width`: the width in pixels for the linestring.
       * Default: `1`px  
-* TODO `video_overlay_b_offset`:
+* `video_overlay_b_offset`: defines the bottom offset of the image for overlay as a ratio of input video. Could be set manually to ratio value or px value (20px means 20 pixels off from bottom).
     * Default:
-        * `2`% video height (for HERO)
-        * `30`% video height (for equirectangular)
-* TODO `video_overlay_l_offset`:
+        * `0.02` (2%) video height (for HERO)
+        * `0.3` (30%) video height (for equirectangular)
+* `video_overlay_l_offset`: defines the left offset of the image for overlay as a ratio of input video. Could be set manually to ratio value or px value (20px means 20 pixels off from left).
     * Default:
-        * `2`% video width (for HERO)
-        * `30`% video height (for equirectangular)
+        * `0.02` (2%) video width (for HERO)
+        * `0.3` (30%) video height (for equirectangular)
 
 ## Sample varible for common GoPro video sizes
 
@@ -58,8 +58,10 @@ mapbox_zoom_level: 10
 mapbox_img_w: 500
 mapbox_line_colour_hex: E48241
 mapbox_marker_colour_hex: 000000
-video_overlay_l_offset_pc:
-video_overlay_t_offset_pc:
+mapbox_img_w:
+mapbox_img_h:
+video_overlay_b_offset:
+video_overlay_l_offset:
 ```
 
 `python3 main.py -f GS018422-gps-only.json`
@@ -77,36 +79,6 @@ video_overlay_t_offset_pc:
 3. Add variables to MapBox Scripts
 4. Add the final logic to overlay mapbox images on video (to not be done yet)
 5. Bundle everything into a single script, taking `variables.txt` and an input json via the command line.
-
-## Overlay Scripts
-
-There are 2 scripts: overlay.py (ffmpeg) and overlay_cv2.py (opencv)
-
-### overlay.py
-
-This script requires ffmpeg installed in the system and ffmpeg-python, opencv-python from pip. For example, in Ubuntu:
-
-    # install ffmpeg
-    sudo apt install ffmpeg
-
-    # install opencv
-    pip install opencv-python
-
-    # install ffmpeg-python (assuming it is python 3, or use pip3)
-    pip install ffmpeg-python
-
-To run this script:
-
-    python overlay.py [json] [image_directory] [main_video] [output_video_path]
-
-not supplying any of the arguments will result in default value for all arguments.
-
-Default values:
-
-    json = "data.json"
-    image_directory = './images/'
-    main_video = 'sample.mp4'
-    output_video_path = 'out.mp4'
 
 ## License
 
