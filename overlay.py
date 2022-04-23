@@ -4,36 +4,37 @@
 #   2. Scale using ffmpeg
 
 # use ffmpeg-python
+from msilib.schema import Error
+from tkinter import W
 import ffmpeg
 import os
 from os import listdir
 from os.path import isfile, join
 import json
-import sys
 import cv2
+import settings
+from settings import INPUT_VIDEO_MODE, OVERLAY_OFFSETS, OVERLAY_RATIO
+from services.geojson_service import images_dir
 
-image_dir = "./images/"
-videopath = 'sample.mp4'
-outpath = 'out.mp4'
-jsonpath = "data.json"
-
-if len(sys.argv) == 5:
-    jsonpath = sys.argv[1]
-    image_dir = sys.argv[2]
-    videopath = sys.argv[3]
-    outpath = sys.argv[4]
+work_dir = "./.outfile"
 
 def create_overlay(geojson):
+    # prepare work directory
     global work_dir
+    isExist = os.path.exists(work_dir)
+
+    if not isExist:
+        # Create a new directory because it does not exist 
+        os.makedirs(work_dir)
 
     # Get images list from image directory
-    image_list = [f for f in listdir(image_dir) if isfile(join(image_dir, f))]
+    image_list = [f for f in listdir(images_dir) if isfile(join(images_dir, f))]
     image_len = len(image_list)
 
     # Get map image dimension
     geopoints = geojson["1"]["streams"]["GPS5"]["samples"]
     geo_i = 0
-    map_overlay = cv2.imread(image_dir+("/%06d"%geo_i)+".png")
+    map_overlay = cv2.imread(images_dir+("/%06d"%geo_i)+".png")
     height, width, layers = map_overlay.shape
 
     # Initialize variables
@@ -61,7 +62,7 @@ def create_overlay(geojson):
             break
             
         filename = ("%06d"%geo_i)+".png"
-        images.append(cv2.imread(image_dir+"/"+filename))
+        images.append(cv2.imread(images_dir+"/"+filename))
         frames += 1
         print("Frame: ", frames, "; Image File: ", filename, "; Timestamp (second)", sec, "; Frame time (ms):", ms, "; Point's cts:", cur_point["cts"])
         
@@ -80,49 +81,59 @@ def create_overlay(geojson):
 
     out.release()
 
-# get geojson data
-f = open(jsonpath)
-geojson = json.load(f)
-f.close()
+def create(jsonpath, videopath, outpath):
+    global work_dir
 
-# prepare work directory
-work_dir = "./.outfile"
-isExist = os.path.exists(work_dir)
+    # get geojson data
+    f = open(jsonpath)
+    geojson = json.load(f)
+    f.close()
 
-if not isExist:
-  # Create a new directory because it does not exist 
-  os.makedirs(work_dir)
+    create_overlay(geojson)
 
-create_overlay(geojson)
+    # get main video annd overlay
+    stream = ffmpeg.input(videopath)
+    overlay = ffmpeg.input(work_dir+'/overlay.mp4')
+    
+    if INPUT_VIDEO_MODE not in OVERLAY_OFFSETS:
+        raise Error("INPUT_VIDEO_MODE is not supported. Supported modes: 'HERO', '360'.")
 
-# get main video annd overlay
-stream = ffmpeg.input(videopath)
-overlay = ffmpeg.input(work_dir+'/overlay.mp4')
+    stream = ffmpeg.overlay(stream, overlay, **OVERLAY_OFFSETS[INPUT_VIDEO_MODE])
 
-stream = ffmpeg.overlay(stream, overlay, x="2*W/100", y="H-h-2*H/100")
+    stream = ffmpeg.output(stream, outpath)
+    cmd = ffmpeg.compile(stream)
 
-stream = ffmpeg.output(stream, outpath)
-cmd = ffmpeg.compile(stream)
+    # get all streams and copy them to output
+    # retain original video's stream order
+    # remove video stream from existing command
+    cmd.remove('-map')
+    cmd.remove('[s0]')
+    # probe input video for the streams
+    streams = ffmpeg.probe(videopath)['streams']
+    # copy streams without messing with the order
+    for s in streams:
+        cmd.insert( len(cmd) - 1, "-map" )
+        if s['codec_type'] != 'video':
+            cmd.insert( len(cmd) - 1, "0:%d" % s['index'] )
+        else:
+            cmd.insert( len(cmd) - 1, "[s0]" )
 
-# get all streams and copy them to output
-# retain original video's stream order
-# remove video stream from existing command
-cmd.remove('-map')
-cmd.remove('[s0]')
-# probe input video for the streams
-streams = ffmpeg.probe(videopath)['streams']
-stream_maps = []
-# copy streams without messing with the order
-for s in streams:
-    cmd.insert( len(cmd) - 1, "-map" )
-    if s['codec_type'] != 'video':
-        cmd.insert( len(cmd) - 1, "0:%d" % s['index'] )
-    else:
-        cmd.insert( len(cmd) - 1, "[s0]" )
+    print("======= FFMPEG COMMAND =======")
+    print(' '.join(cmd))
+    print("===== FFMPEG COMMAND END =====")
 
-print("======= FFMPEG COMMAND =======")
-print(' '.join(cmd))
-print("===== FFMPEG COMMAND END =====")
+    # execute ffmpeg command
+    os.system(' '.join(cmd) + " -y")
 
-# execute ffmpeg command
-os.system(' '.join(cmd))
+def set_overlay_dimensions(videopath):
+    if INPUT_VIDEO_MODE not in OVERLAY_RATIO:
+        raise Error("INPUT_VIDEO_MODE is not supported. Supported modes: 'HERO', '360'.")
+
+    streams = ffmpeg.probe(videopath)['streams']
+    for s in streams:
+        if s['codec_type'] == 'video':
+            w = round(s['width'] * OVERLAY_RATIO[INPUT_VIDEO_MODE]['w'])
+            h = round(s['height'] * OVERLAY_RATIO[INPUT_VIDEO_MODE]['h'])
+            print("Set overlay dimension to:",w,"x",h)
+            settings.set_overlay_dimensions(w,h)
+            break

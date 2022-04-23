@@ -1,5 +1,5 @@
-mapbox_key: 
-mapbox_username:
+mapbox_key:sk.eyJ1IjoiYXJpZWZhdGtodXIiLCJhIjoiY2wyYmFzMHl5MGJleTNrbnIwbThreGMwbSJ9.-mEzc67EZ7FVEM41wfNpDQ
+mapbox_username:ariefatkhur
 mapbox_base_style:
 mapbox_user_style: 
 mapbox_marker_label:
@@ -11,3 +11,4 @@ mapbox_img_w:
 mapbox_img_h:
 video_overlay_b_offset:
 video_overlay_l_offset:
+input_video_mode:HERO
