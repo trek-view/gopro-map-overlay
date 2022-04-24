@@ -20,8 +20,6 @@ if not MAPBOX_ZOOM_LEVEL:
 if not MAPBOX_BASE_STYLE:
     MAPBOX_BASE_STYLE = "mapbox/dark-v10"
 
-
-# Video mode: HERO or 360
 if "INPUT_VIDEO_MODE" not in vars():
     INPUT_VIDEO_MODE = "CUSTOM"
 

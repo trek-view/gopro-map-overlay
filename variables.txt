@@ -1,5 +1,5 @@
-mapbox_key:sk.eyJ1IjoiYXJpZWZhdGtodXIiLCJhIjoiY2wyYmFzMHl5MGJleTNrbnIwbThreGMwbSJ9.-mEzc67EZ7FVEM41wfNpDQ
-mapbox_username:ariefatkhur
+mapbox_key:
+mapbox_username:
 mapbox_base_style:
 mapbox_user_style: 
 mapbox_marker_label:
@@ -7,7 +7,7 @@ mapbox_zoom_level:
 mapbox_marker_colour_hex:
 mapbox_line_colour_hex:
 mapbox_line_width:
-mapbox_img_w: 50
-mapbox_img_h: 50
-video_overlay_b_offset: 20px
-video_overlay_l_offset: 20px
+mapbox_img_w:
+mapbox_img_h:
+video_overlay_b_offset:
+video_overlay_l_offset:
