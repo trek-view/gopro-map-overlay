@@ -145,8 +145,8 @@ def set_overlay_dimensions(videopath):
     streams = ffmpeg.probe(videopath)['streams']
     for s in streams:
         if s['codec_type'] == 'video':
-            w = round(s['width'] * OVERLAY_RATIO[settings.INPUT_VIDEO_MODE]['w'])
-            h = round(s['height'] * OVERLAY_RATIO[settings.INPUT_VIDEO_MODE]['h'])
+            w = s['width']
+            h = s['height']
             
             mode = "HERO"
             
@@ -163,5 +163,5 @@ def set_overlay_dimensions(videopath):
             break
     
     print("Overlay settings mode:", settings.INPUT_VIDEO_MODE)
-    print("Set overlay dimension to:",OVERLAY_RATIO[settings.INPUT_VIDEO_MODE]['w'],"x",OVERLAY_RATIO[settings.INPUT_VIDEO_MODE]['h'])
+    print("Set overlay dimension to:",settings.MAPBOX_IMG_W,"x",settings.MAPBOX_IMG_H)
     print("Set overlay offset to:","left:%s"%(OVERLAY_OFFSETS[settings.INPUT_VIDEO_MODE]['x']),"bottom:%s"%(OVERLAY_OFFSETS[settings.INPUT_VIDEO_MODE]['y']))

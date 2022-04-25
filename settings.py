@@ -59,18 +59,18 @@ OVERLAY_RATIO = {
     }
 }
 
-def set_overlay_settings(w, h, mode):
+def set_overlay_settings(video_w, video_h, mode):
     global MAPBOX_IMG_H
     global MAPBOX_IMG_W
     global INPUT_VIDEO_MODE
 
     if not MAPBOX_IMG_H:
         INPUT_VIDEO_MODE = mode
-        MAPBOX_IMG_H = h
-        MAPBOX_IMG_W = w
+        MAPBOX_IMG_H = round(video_h * OVERLAY_RATIO[mode]['h'])
+        MAPBOX_IMG_W = round(video_w * OVERLAY_RATIO[mode]['w'])
     else:
-        MAPBOX_IMG_H = int(MAPBOX_IMG_H)
-        MAPBOX_IMG_W = int(MAPBOX_IMG_W)
+        MAPBOX_IMG_H = round(video_h * float(OVERLAY_RATIO[mode]['h']))
+        MAPBOX_IMG_W = round(video_w * float(OVERLAY_RATIO[mode]['w']))
     
     if MAPBOX_IMG_H > 1280 or MAPBOX_IMG_H < 1 or MAPBOX_IMG_W > 1280 or MAPBOX_IMG_W < 1:
         raise ValueError("MAPBOX_IMG_H and MAPBOX_IMG_W must be a number between 1 and 1280")
