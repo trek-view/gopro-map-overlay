@@ -20,14 +20,14 @@ if not args.file or not args.input or not args.output:
     
 overlay.set_overlay_dimensions(args.input)
 
-# images_data = get_data(args.file)
-# # override style recreation (to reuse one created previously, for example)
-# if not MAPBOX_USER_STYLE:
-#     MAPBOX_USER_STYLE = create_base_style()
-#     # we wait some seconds just to allow the style to be available (sometimes fails for first few images otherwise)
-#     sleep(5)
-# # call the image generator method
-# generate_images(MAPBOX_USER_STYLE, images_data)
+images_data = get_data(args.file)
+# override style recreation (to reuse one created previously, for example)
+if not MAPBOX_USER_STYLE:
+    MAPBOX_USER_STYLE = create_base_style()
+    # we wait some seconds just to allow the style to be available (sometimes fails for first few images otherwise)
+    sleep(5)
+# call the image generator method
+generate_images(MAPBOX_USER_STYLE, images_data)
 
 # start creating overlay
 overlay.create(args.file, args.input, args.output)
