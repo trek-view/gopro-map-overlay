@@ -4,7 +4,6 @@
 #   2. Scale using ffmpeg
 
 # use ffmpeg-python
-from tkinter import W
 import ffmpeg
 import os
 from os import listdir
