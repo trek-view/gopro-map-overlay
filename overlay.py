@@ -74,7 +74,13 @@ def create_overlay(geojson):
             sec += 1
             ms = sec * 1000
 
-    out = cv2.VideoWriter(work_dir + '/overlay.mp4',cv2.VideoWriter_fourcc(*'mp4v'), fps, (width,height))
+    out = cv2.VideoWriter(work_dir + '/overlay.avi',cv2.VideoWriter_fourcc(*'XVID'), fps, (width,height))
+    # fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v') # note the lower case
+    # out = cv2.VideoWriter()
+    # success = out.open(work_dir + '/overlay.mp4',fourcc,fps,(width,height),True)
+
+    # if success == False:
+    #     raise Exception("Cannot open opencv video writer. Exiting...")
 
     for i in range(len(images)):
         out.write(images[i])
@@ -93,7 +99,7 @@ def create(jsonpath, videopath, outpath):
 
     # get main video annd overlay
     stream = ffmpeg.input(videopath)
-    overlay = ffmpeg.input(work_dir+'/overlay.mp4')
+    overlay = ffmpeg.input(work_dir+'/overlay.avi')
     
     if settings.INPUT_VIDEO_MODE not in OVERLAY_OFFSETS:
         raise ValueError("INPUT_VIDEO_MODE is not supported. Supported modes: 'HERO', '360'.")
