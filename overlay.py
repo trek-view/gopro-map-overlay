@@ -4,7 +4,6 @@
 #   2. Scale using ffmpeg
 
 # use ffmpeg-python
-from msilib.schema import Error
 from tkinter import W
 import ffmpeg
 import os
@@ -98,7 +97,7 @@ def create(jsonpath, videopath, outpath):
     overlay = ffmpeg.input(work_dir+'/overlay.mp4')
     
     if settings.INPUT_VIDEO_MODE not in OVERLAY_OFFSETS:
-        raise Error("INPUT_VIDEO_MODE is not supported. Supported modes: 'HERO', '360'.")
+        raise ValueError("INPUT_VIDEO_MODE is not supported. Supported modes: 'HERO', '360'.")
 
     offset_x = OVERLAY_OFFSETS[settings.INPUT_VIDEO_MODE]['x']
     if re.search("px$", str(offset_x)):
@@ -142,7 +141,7 @@ def create(jsonpath, videopath, outpath):
 
 def set_overlay_dimensions(videopath):
     if settings.INPUT_VIDEO_MODE not in OVERLAY_RATIO:
-        raise Error("INPUT_VIDEO_MODE is not supported. Supported modes: 'HERO', '360'.")
+        raise ValueError("INPUT_VIDEO_MODE is not supported. Supported modes: 'HERO', '360'.")
 
     streams = ffmpeg.probe(videopath)['streams']
     for s in streams:
