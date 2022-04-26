@@ -129,12 +129,15 @@ def create(jsonpath, videopath, outpath):
     cmd.remove('[s0]')
     # probe input video for the streams
     streams = ffmpeg.probe(videopath)['streams']
+    print(streams)
     # copy streams without messing with the order
-    for s in streams:
-        cmd.insert( len(cmd) - 1, "-map" )
+    for s in streams:        
         if s['codec_type'] != 'video':
-            cmd.insert( len(cmd) - 1, "0:%d" % s['index'] )
+            if 'codec_name' in s:
+                cmd.insert( len(cmd) - 1, "-map" )
+                cmd.insert( len(cmd) - 1, "0:%d" % s['index'] )
         else:
+            cmd.insert( len(cmd) - 1, "-map" )
             cmd.insert( len(cmd) - 1, "[s0]" )
 
     print("======= FFMPEG COMMAND =======")
