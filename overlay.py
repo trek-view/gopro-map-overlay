@@ -129,7 +129,6 @@ def create(jsonpath, videopath, outpath):
     cmd.remove('[s0]')
     # probe input video for the streams
     streams = ffmpeg.probe(videopath)['streams']
-    print(streams)
     # copy streams without messing with the order
     for s in streams:        
         if s['codec_type'] != 'video':
@@ -146,6 +145,9 @@ def create(jsonpath, videopath, outpath):
 
     # execute ffmpeg command
     os.system(' '.join(cmd) + " -y")
+
+    # copy metadata using exiftool
+    os.system('exiftool -TagsFromFile %s "-all:all>all:all" %s'%(videopath, outpath))
 
 def set_overlay_dimensions(videopath):
     if settings.INPUT_VIDEO_MODE not in OVERLAY_RATIO:
