@@ -12,9 +12,10 @@ import json
 import cv2
 import settings
 from settings import OVERLAY_OFFSETS, OVERLAY_RATIO
-from services.geojson_service import images_dir
+from services import geojson_service
 import exiftool
 import re
+import pathlib
 
 work_dir = "./.outfile"
 
@@ -28,13 +29,13 @@ def create_overlay(geojson):
         os.makedirs(work_dir)
 
     # Get images list from image directory
-    image_list = [f for f in listdir(images_dir) if isfile(join(images_dir, f))]
+    image_list = [f for f in listdir(geojson_service.images_dir) if isfile(join(geojson_service.images_dir, f))]
     image_len = len(image_list)
 
     # Get map image dimension
     geopoints = geojson["1"]["streams"]["GPS5"]["samples"]
     geo_i = 0
-    map_overlay = cv2.imread(images_dir+("/%06d"%geo_i)+".png")
+    map_overlay = cv2.imread(geojson_service.images_dir+("/%06d"%geo_i)+".png")
     height, width, layers = map_overlay.shape
 
     # Initialize variables
@@ -62,7 +63,7 @@ def create_overlay(geojson):
             break
             
         filename = ("%06d"%geo_i)+".png"
-        images.append(cv2.imread(images_dir+"/"+filename))
+        images.append(cv2.imread(geojson_service.images_dir+"/"+filename))
         frames += 1
         print("Frame: ", frames, "; Image File: ", filename, "; Timestamp (second)", sec, "; Frame time (ms):", ms, "; Point's cts:", cur_point["cts"])
         
@@ -74,7 +75,7 @@ def create_overlay(geojson):
             sec += 1
             ms = sec * 1000
 
-    out = cv2.VideoWriter(work_dir + '/overlay.avi',cv2.VideoWriter_fourcc(*'XVID'), fps, (width,height))
+    out = cv2.VideoWriter('./.outfile/overlay.avi',cv2.VideoWriter_fourcc(*'XVID'), fps, (width,height))
     # fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v') # note the lower case
     # out = cv2.VideoWriter()
     # success = out.open(work_dir + '/overlay.mp4',fourcc,fps,(width,height),True)
@@ -87,8 +88,10 @@ def create_overlay(geojson):
 
     out.release()
 
-def create(jsonpath, videopath, outpath):
+def create(jsonpath, videopath, wd):
     global work_dir
+    work_dir = wd
+    outpath = "%s-overlay.mp4" % pathlib.Path(videopath).stem
 
     # get geojson data
     f = open(jsonpath)
@@ -99,7 +102,7 @@ def create(jsonpath, videopath, outpath):
 
     # get main video annd overlay
     stream = ffmpeg.input(videopath)
-    overlay = ffmpeg.input(work_dir+'/overlay.avi')
+    overlay = ffmpeg.input('./.outfile/overlay.avi')
     
     if settings.INPUT_VIDEO_MODE not in OVERLAY_OFFSETS:
         raise ValueError("INPUT_VIDEO_MODE is not supported. Supported modes: 'HERO', '360'.")
