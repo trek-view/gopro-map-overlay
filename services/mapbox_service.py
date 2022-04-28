@@ -8,6 +8,7 @@ from typing import List, Tuple
 import requests
 from mapbox import Uploader
 import settings
+from services import geojson_service
 
 upload_service = Uploader(access_token=settings.MAPBOX_KEY)
 BASE_STYLE_ID = "gopro-map-overlay"
@@ -24,7 +25,7 @@ def get_style_layers():
 
 
 def create_base_style():
-    upload_geojson_as_tileset("multiline.geojson")
+    upload_geojson_as_tileset(f"{geojson_service.files_dir}/multiline.geojson")
     layer = {
         "id": "telemetry",
         "source": "gopro-multiline",

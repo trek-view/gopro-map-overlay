@@ -75,7 +75,7 @@ def create_overlay(geojson):
             sec += 1
             ms = sec * 1000
 
-    out = cv2.VideoWriter('./.outfile/overlay.avi',cv2.VideoWriter_fourcc(*'XVID'), fps, (width,height))
+    out = cv2.VideoWriter('%s/overlay.avi'%(work_dir),cv2.VideoWriter_fourcc(*'XVID'), fps, (width,height))
     # fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v') # note the lower case
     # out = cv2.VideoWriter()
     # success = out.open(work_dir + '/overlay.mp4',fourcc,fps,(width,height),True)
@@ -91,7 +91,7 @@ def create_overlay(geojson):
 def create(jsonpath, videopath, wd):
     global work_dir
     work_dir = wd
-    outpath = "%s-overlay.mp4" % pathlib.Path(videopath).stem
+    outpath = "%s/%s-overlay.mp4" % (work_dir,pathlib.Path(videopath).stem)
 
     # get geojson data
     f = open(jsonpath)
@@ -102,7 +102,7 @@ def create(jsonpath, videopath, wd):
 
     # get main video annd overlay
     stream = ffmpeg.input(videopath)
-    overlay = ffmpeg.input('./.outfile/overlay.avi')
+    overlay = ffmpeg.input('%s/overlay.avi'%(work_dir))
     
     if settings.INPUT_VIDEO_MODE not in OVERLAY_OFFSETS:
         raise ValueError("INPUT_VIDEO_MODE is not supported. Supported modes: 'HERO', '360'.")
