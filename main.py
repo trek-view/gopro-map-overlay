@@ -2,13 +2,12 @@ import argparse
 from time import sleep
 
 import os
-from services.geojson_service import generate_images, get_data, set_working_directory
+from services.geojson_service import generate_images, get_data
 from services.mapbox_service import create_base_style
-from settings import MAPBOX_USER_STYLE
+from settings import MAPBOX_USER_STYLE, set_working_directory
 import overlay
 
 parser = argparse.ArgumentParser()
-files_dir = "geojson-files"
 
 parser.add_argument("-f", "--file", help="Telemetry Filename Including .json")
 parser.add_argument("-i", "--input", help="Input video file name.")

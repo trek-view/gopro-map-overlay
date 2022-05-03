@@ -17,25 +17,15 @@ import exiftool
 import re
 import pathlib
 
-work_dir = "./.outfile"
-
 def create_overlay(geojson):
-    # prepare work directory
-    global work_dir
-    isExist = os.path.exists(work_dir)
-
-    if not isExist:
-        # Create a new directory because it does not exist 
-        os.makedirs(work_dir)
-
     # Get images list from image directory
-    image_list = [f for f in listdir(geojson_service.images_dir) if isfile(join(geojson_service.images_dir, f))]
+    image_list = [f for f in listdir(f"{settings.WORK_DIR}/{geojson_service.images_dir}") if isfile(join(f"{settings.WORK_DIR}/{geojson_service.images_dir}", f))]
     image_len = len(image_list)
 
     # Get map image dimension
     geopoints = geojson["1"]["streams"]["GPS5"]["samples"]
     geo_i = 0
-    map_overlay = cv2.imread(geojson_service.images_dir+("/%06d"%geo_i)+".png")
+    map_overlay = cv2.imread(f"{settings.WORK_DIR}/{geojson_service.images_dir}"+("/%06d"%geo_i)+".png")
     height, width, layers = map_overlay.shape
 
     # Initialize variables
@@ -63,7 +53,7 @@ def create_overlay(geojson):
             break
             
         filename = ("%06d"%geo_i)+".png"
-        images.append(cv2.imread(geojson_service.images_dir+"/"+filename))
+        images.append(cv2.imread(f"{settings.WORK_DIR}/{geojson_service.images_dir}"+"/"+filename))
         frames += 1
         print("Frame: ", frames, "; Image File: ", filename, "; Timestamp (second)", sec, "; Frame time (ms):", ms, "; Point's cts:", cur_point["cts"])
         
@@ -75,10 +65,10 @@ def create_overlay(geojson):
             sec += 1
             ms = sec * 1000
 
-    out = cv2.VideoWriter('%s/overlay.avi'%(work_dir),cv2.VideoWriter_fourcc(*'XVID'), fps, (width,height))
+    out = cv2.VideoWriter('%s/overlay.avi'%(settings.WORK_DIR),cv2.VideoWriter_fourcc(*'XVID'), fps, (width,height))
     # fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v') # note the lower case
     # out = cv2.VideoWriter()
-    # success = out.open(work_dir + '/overlay.mp4',fourcc,fps,(width,height),True)
+    # success = out.open(settings.WORK_DIR + '/overlay.mp4',fourcc,fps,(width,height),True)
 
     # if success == False:
     #     raise Exception("Cannot open opencv video writer. Exiting...")
@@ -88,10 +78,8 @@ def create_overlay(geojson):
 
     out.release()
 
-def create(jsonpath, videopath, wd):
-    global work_dir
-    work_dir = wd
-    outpath = "%s/%s-overlay.mp4" % (work_dir,pathlib.Path(videopath).stem)
+def create(jsonpath, videopath):
+    outpath = "%s/%s-overlay.mp4" % (settings.WORK_DIR,pathlib.Path(videopath).stem)
 
     # get geojson data
     f = open(jsonpath)
@@ -102,7 +90,7 @@ def create(jsonpath, videopath, wd):
 
     # get main video annd overlay
     stream = ffmpeg.input(videopath)
-    overlay = ffmpeg.input('%s/overlay.avi'%(work_dir))
+    overlay = ffmpeg.input('%s/overlay.avi'%(settings.WORK_DIR))
     
     if settings.INPUT_VIDEO_MODE not in OVERLAY_OFFSETS:
         raise ValueError("INPUT_VIDEO_MODE is not supported. Supported modes: 'HERO', '360'.")
@@ -166,10 +154,7 @@ def set_overlay_dimensions(videopath):
             
             try:
                 # Get 360 tag
-                with exiftool.ExifToolAlpha() as et:
-                    projection_type = et.get_tag(videopath, "XMP-GSpherical:ProjectionType")
-                    if projection_type == "equirectangular":
-                        mode = "360"
+                mode = determine_mode(videopath)
             except:
                 print("exiftool is not found. Automatic equirectangular video detection is disabled.")
 
@@ -179,3 +164,28 @@ def set_overlay_dimensions(videopath):
     print("Overlay settings mode:", settings.INPUT_VIDEO_MODE)
     print("Set overlay dimension to:",settings.MAPBOX_IMG_W,"x",settings.MAPBOX_IMG_H)
     print("Set overlay offset to:","left:%s"%(OVERLAY_OFFSETS[settings.INPUT_VIDEO_MODE]['x']),"bottom:%s"%(OVERLAY_OFFSETS[settings.INPUT_VIDEO_MODE]['y']))
+
+def determine_mode(videopath):
+    # Get 360 tag
+    with exiftool.ExifToolAlpha() as et:
+        projection_type = et.get_tag(videopath, "XMP-GSpherical:ProjectionType")
+        if projection_type == "equirectangular":
+            return "360"
+    
+    # xmp tags might be malformed, get the v4 output of exiftool
+    os.system("exiftool -v4 -X %s > %s/metadata.xml" % (videopath, settings.WORK_DIR))
+    file = open(f"{settings.WORK_DIR}/metadata.xml", 'r')
+    lines = file.readlines()
+    xml = ""
+
+    for line in lines:
+        linesearch = re.search('(?<=\[)(.+?)(?=\])', line)
+        if linesearch:
+            xml += linesearch.group(1)
+
+    regex = r"<GSpherical:ProjectionType>(.+?)<\/GSpherical:ProjectionType>"
+    match = re.search(regex, xml)
+    if match and match.group(1) == "equirectangular":
+        return "360"
+    
+    return "HERO"

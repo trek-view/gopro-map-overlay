@@ -1,3 +1,5 @@
+import os
+
 with open("variables.txt", "r") as f:
     for variable in f.readlines():
         value = variable.split(":")[1].strip()
@@ -59,6 +61,8 @@ OVERLAY_RATIO = {
     }
 }
 
+WORK_DIR = ""
+
 def set_overlay_settings(video_w, video_h, mode):
     global MAPBOX_IMG_H
     global MAPBOX_IMG_W
@@ -74,3 +78,13 @@ def set_overlay_settings(video_w, video_h, mode):
     
     if MAPBOX_IMG_H > 1280 or MAPBOX_IMG_H < 1 or MAPBOX_IMG_W > 1280 or MAPBOX_IMG_W < 1:
         raise ValueError("MAPBOX_IMG_H and MAPBOX_IMG_W must be a number between 1 and 1280")
+
+def set_working_directory(wd):
+    global WORK_DIR
+    isExist = os.path.exists(wd)
+
+    if not isExist:
+        # Create a new directory because it does not exist 
+        os.makedirs(wd)
+        
+    WORK_DIR = wd
