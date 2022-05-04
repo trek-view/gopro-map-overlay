@@ -44,4 +44,4 @@ if not MAPBOX_USER_STYLE:
 generate_images(MAPBOX_USER_STYLE, images_data)
 
 # start creating overlay
-overlay.create(args.file, args.input, args.output)
+overlay.create(args.file, args.input)
