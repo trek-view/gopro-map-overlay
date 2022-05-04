@@ -23,7 +23,7 @@ if not MAPBOX_BASE_STYLE:
     MAPBOX_BASE_STYLE = "mapbox/dark-v10"
 
 if "INPUT_VIDEO_MODE" not in vars():
-    INPUT_VIDEO_MODE = "CUSTOM"
+    INPUT_VIDEO_MODE = "HERO"
 
 # x and y offset (ratio to width and height)
 OVERLAY_OFFSETS = {
@@ -66,18 +66,30 @@ WORK_DIR = ""
 def set_overlay_settings(video_w, video_h, mode):
     global MAPBOX_IMG_H
     global MAPBOX_IMG_W
+    global VIDEO_OVERLAY_L_OFFSET
+    global VIDEO_OVERLAY_B_OFFSET
     global INPUT_VIDEO_MODE
 
+    INPUT_VIDEO_MODE = mode
+
     if not MAPBOX_IMG_H:
-        INPUT_VIDEO_MODE = mode
         MAPBOX_IMG_H = round(video_h * OVERLAY_RATIO[mode]['h'])
+    else:
+        MAPBOX_IMG_H = round(video_h * float(MAPBOX_IMG_H))
+
+    if not MAPBOX_IMG_W:
         MAPBOX_IMG_W = round(video_w * OVERLAY_RATIO[mode]['w'])
     else:
-        MAPBOX_IMG_H = round(video_h * float(OVERLAY_RATIO[mode]['h']))
-        MAPBOX_IMG_W = round(video_w * float(OVERLAY_RATIO[mode]['w']))
+        MAPBOX_IMG_W = round(video_w * float(MAPBOX_IMG_W))
+
+    if not VIDEO_OVERLAY_L_OFFSET:
+        VIDEO_OVERLAY_L_OFFSET = OVERLAY_OFFSETS[mode]['x']
+    
+    if not VIDEO_OVERLAY_B_OFFSET:
+        VIDEO_OVERLAY_B_OFFSET = OVERLAY_OFFSETS[mode]['y']
     
     if MAPBOX_IMG_H > 1280 or MAPBOX_IMG_H < 1 or MAPBOX_IMG_W > 1280 or MAPBOX_IMG_W < 1:
-        raise ValueError("MAPBOX_IMG_H and MAPBOX_IMG_W must be a number between 1 and 1280")
+        raise ValueError(f"MAPBOX_IMG_H and MAPBOX_IMG_W must be a number between 1 and 1280. Current settings: {MAPBOX_IMG_W}x{MAPBOX_IMG_H}")
 
 def set_working_directory(wd):
     global WORK_DIR

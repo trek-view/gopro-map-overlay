@@ -95,18 +95,18 @@ def create(jsonpath, videopath):
     if settings.INPUT_VIDEO_MODE not in OVERLAY_OFFSETS:
         raise ValueError("INPUT_VIDEO_MODE is not supported. Supported modes: 'HERO', '360'.")
 
-    offset_x = OVERLAY_OFFSETS[settings.INPUT_VIDEO_MODE]['x']
+    offset_x = settings.VIDEO_OVERLAY_L_OFFSET
     if re.search("px$", str(offset_x)):
         offset_x = offset_x.replace("px", "").strip()
     else:
-        offset_x = "%.3f*W" % float(OVERLAY_OFFSETS[settings.INPUT_VIDEO_MODE]['x'])
+        offset_x = "%.3f*W" % float(settings.VIDEO_OVERLAY_L_OFFSET)
     
-    offset_y = OVERLAY_OFFSETS[settings.INPUT_VIDEO_MODE]['y']
+    offset_y = settings.VIDEO_OVERLAY_B_OFFSET
     if re.search("px$", str(offset_y)):
         offset_y = offset_y.replace("px", "").strip()
         offset_y = "H-h-%s" %offset_y
     else:
-        offset_y = "H-h-%.3f*H" % float(OVERLAY_OFFSETS[settings.INPUT_VIDEO_MODE]['y'])
+        offset_y = "H-h-%.3f*H" % float(settings.VIDEO_OVERLAY_B_OFFSET)
 
     stream = ffmpeg.overlay(stream, overlay, x = offset_x, y = offset_y)
 
@@ -163,7 +163,7 @@ def set_overlay_dimensions(videopath):
     
     print("Overlay settings mode:", settings.INPUT_VIDEO_MODE)
     print("Set overlay dimension to:",settings.MAPBOX_IMG_W,"x",settings.MAPBOX_IMG_H)
-    print("Set overlay offset to:","left:%s"%(OVERLAY_OFFSETS[settings.INPUT_VIDEO_MODE]['x']),"bottom:%s"%(OVERLAY_OFFSETS[settings.INPUT_VIDEO_MODE]['y']))
+    print("Set overlay offset to:","left:%s"%(settings.VIDEO_OVERLAY_L_OFFSET),"bottom:%s"%(settings.VIDEO_OVERLAY_B_OFFSET))
 
 def determine_mode(videopath):
     # Get 360 tag
