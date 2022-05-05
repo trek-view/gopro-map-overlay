@@ -1,3 +1,5 @@
+import os
+
 with open("variables.txt", "r") as f:
     for variable in f.readlines():
         value = variable.split(":")[1].strip()
@@ -9,13 +11,8 @@ with open("variables.txt", "r") as f:
 REQUIRED_VARIABLES = ["mapbox_username", "mapbox_key", "mapbox_username"]
 
 for var in REQUIRED_VARIABLES:
-    if not vars()[var.upper()]:
+    if var.upper() not in vars():
         raise ValueError(f"Mapbox {var} missing in the variables.txt file.")
-
-# Height calculated using 4:3 ratio
-if not MAPBOX_IMG_W:
-    MAPBOX_IMG_W = 500
-MAPBOX_IMG_H = int(MAPBOX_IMG_W * 3 / 4)
 
 MAPBOX_LINE_COLOUR_HEX = str(MAPBOX_LINE_COLOUR_HEX).replace("#", "")
 MAPBOX_MARKER_COLOUR_HEX = str(MAPBOX_MARKER_COLOUR_HEX).replace("#", "")
@@ -24,3 +21,82 @@ if not MAPBOX_ZOOM_LEVEL:
     MAPBOX_ZOOM_LEVEL = 17
 if not MAPBOX_BASE_STYLE:
     MAPBOX_BASE_STYLE = "mapbox/dark-v10"
+
+if "INPUT_VIDEO_MODE" not in vars():
+    INPUT_VIDEO_MODE = "HERO"
+
+# x and y offset (ratio to width and height)
+OVERLAY_OFFSETS = {
+    "HERO" : {
+        # 2% from left, 2% from bottom
+        "x": 0.02,
+        "y": 0.02
+    },
+    "360" : {
+        # 30% from left, 30% from bottom
+        "x": 0.3,
+        "y": 0.3
+    },
+    "CUSTOM" : {
+        "x": VIDEO_OVERLAY_L_OFFSET,
+        "y": VIDEO_OVERLAY_B_OFFSET
+    }
+}
+
+# mapbox overlay's dimension setting with ratio to input video's dimensions
+OVERLAY_RATIO = {
+    "HERO" : {
+        # 20% video width, 20% video height
+        "w": 0.2,
+        "h": 0.2
+    },
+    "360" : {
+        # 10% video width, 10% video height
+        "w": 0.1,
+        "h": 0.1
+    },
+    "CUSTOM" : {
+        "w": MAPBOX_IMG_W,
+        "h": MAPBOX_IMG_H
+    }
+}
+
+WORK_DIR = ""
+
+def set_overlay_settings(video_w, video_h, mode):
+    global MAPBOX_IMG_H
+    global MAPBOX_IMG_W
+    global VIDEO_OVERLAY_L_OFFSET
+    global VIDEO_OVERLAY_B_OFFSET
+    global INPUT_VIDEO_MODE
+
+    INPUT_VIDEO_MODE = mode
+
+    if not MAPBOX_IMG_H:
+        MAPBOX_IMG_H = round(video_h * OVERLAY_RATIO[mode]['h'])
+    else:
+        MAPBOX_IMG_H = round(video_h * float(MAPBOX_IMG_H))
+
+    if not MAPBOX_IMG_W:
+        MAPBOX_IMG_W = round(video_w * OVERLAY_RATIO[mode]['w'])
+    else:
+        MAPBOX_IMG_W = round(video_w * float(MAPBOX_IMG_W))
+
+    if not VIDEO_OVERLAY_L_OFFSET:
+        VIDEO_OVERLAY_L_OFFSET = OVERLAY_OFFSETS[mode]['x']
+    
+    if not VIDEO_OVERLAY_B_OFFSET:
+        VIDEO_OVERLAY_B_OFFSET = OVERLAY_OFFSETS[mode]['y']
+    
+    if MAPBOX_IMG_H > 1280 or MAPBOX_IMG_H < 1 or MAPBOX_IMG_W > 1280 or MAPBOX_IMG_W < 1:
+        raise ValueError(f"MAPBOX_IMG_H and MAPBOX_IMG_W must be a number between 1 and 1280. Current settings: {MAPBOX_IMG_W}x{MAPBOX_IMG_H}")
+
+def set_working_directory(wd):
+    global WORK_DIR
+    isExist = os.path.exists(wd)
+
+    if not isExist:
+        # Create a new directory because it does not exist 
+        os.makedirs(wd)
+        
+    WORK_DIR = wd

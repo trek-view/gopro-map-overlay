@@ -7,27 +7,17 @@ from typing import List, Tuple
 
 import requests
 from mapbox import Uploader
-from settings import (
-    MAPBOX_BASE_STYLE,
-    MAPBOX_IMG_H,
-    MAPBOX_IMG_W,
-    MAPBOX_KEY,
-    MAPBOX_LINE_COLOUR_HEX,
-    MAPBOX_LINE_WIDTH,
-    MAPBOX_MARKER_COLOUR_HEX,
-    MAPBOX_MARKER_LABEL,
-    MAPBOX_USERNAME,
-    MAPBOX_ZOOM_LEVEL,
-)
+import settings
+from services import geojson_service
 
-upload_service = Uploader(access_token=MAPBOX_KEY)
+upload_service = Uploader(access_token=settings.MAPBOX_KEY)
 BASE_STYLE_ID = "gopro-map-overlay"
 MULTILINE_TILESET_ID = "gopro-multiline-geojson"
 
 
 def get_style_layers():
     r = requests.get(
-        f"https://api.mapbox.com/styles/v1/{MAPBOX_BASE_STYLE}?access_token={MAPBOX_KEY}"
+        f"https://api.mapbox.com/styles/v1/{settings.MAPBOX_BASE_STYLE}?access_token={settings.MAPBOX_KEY}"
     )
     if r.status_code != 200:
         return []
@@ -35,15 +25,15 @@ def get_style_layers():
 
 
 def create_base_style():
-    upload_geojson_as_tileset("multiline.geojson")
+    upload_geojson_as_tileset(f"{settings.WORK_DIR}/multiline.geojson")
     layer = {
         "id": "telemetry",
         "source": "gopro-multiline",
         "source-layer": MULTILINE_TILESET_ID,
         "type": "line",
         "paint": {
-            "line-color": f'#{MAPBOX_LINE_COLOUR_HEX or "000000"}',
-            "line-width": MAPBOX_LINE_WIDTH or 1,
+            "line-color": f'#{settings.MAPBOX_LINE_COLOUR_HEX or "000000"}',
+            "line-width": settings.MAPBOX_LINE_WIDTH or 1,
         },
     }
     # we get the default layers from saved files, as the API doesn't allow us to use templates as we do in Mapbox Studio
@@ -58,7 +48,7 @@ def create_base_style():
         "metadata": {},
         "sources": {
             "gopro-multiline": {
-                "url": f"mapbox://{MAPBOX_USERNAME}.{MULTILINE_TILESET_ID}",
+                "url": f"mapbox://{settings.MAPBOX_USERNAME}.{MULTILINE_TILESET_ID}",
                 "type": "vector",
             },
             # necessary sources for base layers
@@ -75,12 +65,12 @@ def create_base_style():
         "layers": DEFAULT_LAYERS,
     }
     r = requests.post(
-        f"https://api.mapbox.com/styles/v1/{MAPBOX_USERNAME}?access_token={MAPBOX_KEY}",
+        f"https://api.mapbox.com/styles/v1/{settings.MAPBOX_USERNAME}?access_token={settings.MAPBOX_KEY}",
         json=style_request_body,
         headers={"Content-Type": "application/json"},
     )
-    MAPBOX_USER_STYLE = r.json()["id"]
-    return MAPBOX_USER_STYLE
+    settings.MAPBOX_USER_STYLE = r.json()["id"]
+    return settings.MAPBOX_USER_STYLE
 
 
 def upload_geojson_as_tileset(geojson: str):
@@ -107,9 +97,9 @@ def upload_geojson_as_tileset(geojson: str):
 def generate_image(coords, style):
     r = requests.get(
         (
-            f"https://api.mapbox.com/styles/v1/{MAPBOX_USERNAME}/{style}/"
-            f"static/pin-s{f'-{MAPBOX_MARKER_LABEL}' if MAPBOX_MARKER_LABEL else ''}+{MAPBOX_MARKER_COLOUR_HEX or 'ffffff'}({coords[0]},{coords[1]})/{coords[0]}, {coords[1]},{MAPBOX_ZOOM_LEVEL}/"
-            f"{MAPBOX_IMG_W}x{MAPBOX_IMG_H}?access_token={MAPBOX_KEY}"
+            f"https://api.mapbox.com/styles/v1/{settings.MAPBOX_USERNAME}/{style}/"
+            f"static/pin-s{f'-{settings.MAPBOX_MARKER_LABEL}' if settings.MAPBOX_MARKER_LABEL else ''}+{settings.MAPBOX_MARKER_COLOUR_HEX or 'ffffff'}({coords[0]},{coords[1]})/{coords[0]}, {coords[1]},{settings.MAPBOX_ZOOM_LEVEL}/"
+            f"{settings.MAPBOX_IMG_W}x{settings.MAPBOX_IMG_H}?access_token={settings.MAPBOX_KEY}"
         )
     )
     if r.status_code == 200:

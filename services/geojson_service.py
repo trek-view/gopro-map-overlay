@@ -1,20 +1,16 @@
 import json
 import os
-import urllib.parse
-from multiprocessing.sharedctypes import Value
 
-import requests
-from settings import MAPBOX_KEY, MAPBOX_USERNAME
+import settings
 
 from services.mapbox_service import generate_image
 
 files_dir = "geojson-files"
 images_dir = "mapbox-images"
 
-
 def generate_images(style, images_data):
     try:
-        os.mkdir(f"./{images_dir}")
+        os.mkdir(f"{settings.WORK_DIR}/{images_dir}")
     except OSError as error:
         print(error)
 
@@ -22,7 +18,7 @@ def generate_images(style, images_data):
         image = generate_image(data, style)
 
         if image:
-            with open(f"./{images_dir}/{index:06}.png", "wb") as f:
+            with open(f"{settings.WORK_DIR}/{images_dir}/{index:06}.png", "wb") as f:
                 f.write(image)
                 f.close()
                 print(f"Fetched image: {index}")
@@ -48,13 +44,13 @@ def generate_multiline_geojson(data):
 
     filedata = f'{{"type": "FeatureCollection","features": [{{"type": "Feature","geometry": {{"type": "MultiLineString","coordinates": {multiline}}},"properties": {{"prop0": "value0"}}}}]}}'
 
-    f = open(f"./multiline.geojson", "w")
+    f = open(f"{settings.WORK_DIR}/multiline.geojson", "w")
     f.write(filedata)
     f.close()
 
 
 def get_data(file: str):
-    with open(f"./{file}") as json_file:
+    with open(f"{file}") as json_file:
         data = json.load(json_file)
         linestring = []
 
