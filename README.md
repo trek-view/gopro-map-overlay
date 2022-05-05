@@ -1,6 +1,8 @@
-## Python GeoJSON generator from telemetry GPS Coordinates
+# GoPro Map Overlay
 
-Use GoPro telemetry to generate a picture-in-picture map.
+A proof-of-concept to use GoPro telemetry to generate a picture-in-picture map overlay for your GoPro videos.
+
+Read this post for a bit more information about our thought processes in building this: https://www.trekview.org/blog/2022/overlay-gopro-telemetry-data-as-map-in-video
 
 ## Prerequisites
 
@@ -36,10 +38,10 @@ To run the script you need to set the required variables (and optional variables
     * Default: ''
 * `mapbox_marker_label`: You can add a label inside the marker. It can be a digit (0-9), a letter (a-z) or a Maki icon (without svg extension, i.e: circle). [List of available icons](https://labs.mapbox.com/maki-icons/).
     * Default: ''
-* `mapbox_img_w`: defines the width of the image for overlay as a ratio of input video. 
+* `mapbox_img_w`: defines the width of the image for overlay as a ratio of input video (must result in a number between 1 and 1280). 
         * `0.2` (20%) of input video width (for HERO)
         * `0.1` (10%) of input video width (for equirectangular)
-* `mapbox_img_h`: defines the height of the image for overlay as a ratio of input video. 
+* `mapbox_img_h`: defines the height of the image for overlay as a ratio of input video (must result in a number between 1 and 1280). 
         * `0.2` (20%) of input video width (for HERO)
         * `0.1` (10%) of input video width (for equirectangular)
 * `mapbox_zoom_level`: the zoom level for the map (recommended between 8-10). [See MapBox docs for more](https://docs.mapbox.com/help/glossary/zoom-level/). Between 0 and 22. In short, the higher the zoom number, the closer to the ground the zoom is.
