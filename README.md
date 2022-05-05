@@ -2,12 +2,25 @@
 
 Use GoPro telemetry to generate a picture-in-picture map.
 
+## Prerequisites
+
+1. First extract the telemetry file (as json) from your GoPro video using [gopro-telemetry](https://github.com/JuanIrache/gopro-telemetry/). [Detailed instructions about how to do this can be found in this post](https://www.trekview.org/blog/2022/gopro-telemetry-exporter-getting-started/).
+2. Install required packages `pip3 install -r requirements.txt`
+3. Fill in the `variables.txt` with your Mapbox API Key and username, and other variables if needed (see `variables.txt` section on this page.
+
 ## Usage
 
-0. First extract the telemetry file (as json) from your GoPro video using [gopro-telemetry](https://github.com/JuanIrache/gopro-telemetry/). [Detailed instructions about how to do this can be found in this post](https://www.trekview.org/blog/2022/gopro-telemetry-exporter-getting-started/).
-1. Install required packages `pip3 install -r requirements.txt`
-2. Fill in the `variables.txt` with your Mapbox API Key and username, and other variables if needed.
-3. Run `python3 main.py -f TELEMETRY.json`, replacing `TELEMETRY.json` with the file created at step 0. This will generate a `multiline.geojson` file, upload it to a new style in your Mapbox accountg and generate .jpg map images in the directory `mapbox-images/`. This process will happen at `services/geojson_service/generate_images()`.
+`python3 main.py -f TELEMETRY.json -i INPUT.mp4 -o OUT_DIRECTORY`
+
+* `-f`: input telemetry json file (see prerequisites)
+* `-i`: input video file you generated telemetry json from (and map should be overlaid on)
+* `-o`: output directory for final video file with overlay
+
+### Example usage
+
+```
+python3 main.py -f GX010044-gps-only.json -i GX010044.MP4 -o video-overlay/
+```
 
 ### `variables.txt`
 
@@ -46,39 +59,57 @@ To run the script you need to set the required variables (and optional variables
         * `0.02` (2%) video width (for HERO)
         * `0.3` (30%) video height (for equirectangular)
 
-## Sample varible for common GoPro video sizes
+#### Sample varible for common GoPro video sizes
 
-### HERO video @ 5.2k
+##### HERO video
+
+An example `variables.txt` with some custom values;
 
 ```
 mapbox_key: YOUR_KEY
 mapbox_username: YOUR_USER
-mapbox_base_style: outdoors
-mapbox_zoom_level: 10
-mapbox_img_w: 500
-mapbox_line_colour_hex: E48241
-mapbox_marker_colour_hex: 000000
-mapbox_img_w:
-mapbox_img_h:
-video_overlay_b_offset:
-video_overlay_l_offset:
+mapbox_base_style: mapbox/outdoors-v11
+mapbox_user_style: 
+mapbox_marker_label: circle
+mapbox_zoom_level: 15
+mapbox_line_colour_hex: ffffff
+mapbox_marker_colour_hex: 3bb2d0
+mapbox_line_width: 1
+mapbox_img_w: 0.2
+mapbox_img_h: 0.2
+video_overlay_b_offset: 0.02
+video_overlay_l_offset: 0.02
 ```
 
-`python3 main.py -f GS018422-gps-only.json`
+##### 360 video
 
-### 360 video @ 5.6k
+An example `variables.txt` with some custom values;
 
+```
+mapbox_key: YOUR_KEY
+mapbox_username: YOUR_USER
+mapbox_base_style: mapbox/outdoors-v11
+mapbox_user_style: 
+mapbox_marker_label: circle
+mapbox_zoom_level: 15
+mapbox_line_colour_hex: ffffff
+mapbox_marker_colour_hex: 3bb2d0
+mapbox_line_width: 1
+mapbox_img_w: 0.1
+mapbox_img_h: 0.1
+video_overlay_b_offset: 0.3
+video_overlay_l_offset: 0.3
+```
 
-`python3 main.py -f GS018422.json`
+## How it works
 
-
-## Todo 
-
-1. Automate step 3 by creating a mapbox style programatically
-2. Merge step 2 and 3 into a single command
-3. Add variables to MapBox Scripts
-4. Add the final logic to overlay mapbox images on video (to not be done yet)
-5. Bundle everything into a single script, taking `variables.txt` and an input json via the command line.
+1. Script detects if video is equirectangular or normal hero video using exiftool 
+2. a `multiline.geojson` file from all .json telemetry points
+3. the `multiline.geojson` file is uploaded as a new style to the specified MapBox account
+4. the script used the new style which is used to generate a .jpg map images for each point in the `mapbox-images/` directory.
+5. The resulting images are wrapped up into a video containing map images at frame spacing rate defined in the telemetry json.
+6. The map video is overlaid using ffmpeg to the original video (based on default values or `variables.txt` values) and all streams copied from original video (e.g. video, sound, and telemetry) to the new final video
+7. exiftool is used to copy global metadata to the new final video
 
 ## License
 
