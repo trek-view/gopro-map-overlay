@@ -113,6 +113,10 @@ video_overlay_l_offset: 0.3
 6. The map video is overlaid using ffmpeg to the original video (based on default values or `variables.txt` values) and all streams copied from original video (e.g. video, sound, and telemetry) to the new final video
 7. exiftool is used to copy global metadata to the new final video
 
+## Support
+
+Community support available on Discord: https://discord.gg/ZVk7h9hCfw
+
 ## License
 
 The code of this site is licensed under a [MIT License](/LICENSE).
