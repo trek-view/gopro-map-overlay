@@ -20,9 +20,25 @@ Read this post for a bit more information about our thought processes in buildin
 
 ### Example usage
 
-```
+#### HERO video:
+
+```shell
 python3 main.py -f GX010044-gps-only.json -i GX010044.MP4 -o video-overlay/
 ```
+
+Output:
+
+[![GX010044-overlay.mp4](https://img.youtube.com/vi/6ThvXBp1Nw4/0.jpg)](https://youtu.be/6ThvXBp1Nw4)
+
+#### Equirectangular video:
+
+```shell
+python3 main.py -f GS020176-gps-only.json -i GS020176.MP4 -o video-overlay/
+```
+
+Output:
+
+[![GS020176-overlay.mp4](https://img.youtube.com/vi/Eg8lHVRRguo/0.jpg)](https://youtu.be/Eg8lHVRRguo)
 
 ### `variables.txt`
 
